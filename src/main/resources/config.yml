@@ -1,0 +1,4 @@
+Config:
+  autoBackup:
+    Enable: true
+    time: 2000
