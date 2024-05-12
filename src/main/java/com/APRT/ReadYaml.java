@@ -75,7 +75,7 @@ public class ReadYaml {
         }
     }
     /*
-    //å¦‚ä½•è°ƒç”¨ï¼Ÿ
+    //ÈçºÎµ÷ÓÃ£¿
     public static void main(String[] args) {
         String stringValue = readYamlString("config/config.yml", "Config.autoBackup.Enable");
         System.out.println("String value: " + stringValue);
