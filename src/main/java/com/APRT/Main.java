@@ -1,17 +1,54 @@
 package com.APRT;
+import com.APRT.ReadYaml;
+import java.util.Scanner;
+import org.yaml.snakeyaml.DumperOptions;
+import org.yaml.snakeyaml.Yaml;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import  java.io.*;
+import java.util.logging.Logger;
 
-//TIP 要<b>运行</b>代码，请按 <shortcut actionId="Run"/> 或
-// 点击装订区域中的 <icon src="AllIcons.Actions.Execute"/> 图标。
+
 public class Main {
+    Scanner input = new Scanner(System.in);
+    Yaml yaml = new Yaml();
+    String sourceFilePath = "src/main/resources/config.yml";
+    static String destinationFolderPath = "config/";
+    private static final Logger logger = Logger.getLogger(Main.class.getName());
     public static void main(String[] args) {
-        //TIP 当文本光标位于高亮显示的文本处时按 <shortcut actionId="ShowIntentionActions"/>
-        // 查看 IntelliJ IDEA 建议如何修正。
-        System.out.printf("Hello and welcome!");
+        try {
+            // ��ȡ��Դ�ļ�
+            InputStream inputStream = Main.class.getClassLoader().getResourceAsStream("config.yml");
+            if (inputStream == null) {
+                System.out.println("Can not find config!");
+                return;
+            }
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP 按 <shortcut actionId="Debug"/> 开始调试代码。我们已经设置了一个 <icon src="AllIcons.Debugger.Db_set_breakpoint"/> 断点
-            // 但您始终可以通过按 <shortcut actionId="ToggleLineBreakpoint"/> 添加更多断点。
-            System.out.println("i = " + i);
+            // ����Ŀ���ļ���
+            File destinationFolder = new File(destinationFolderPath);
+            if (!destinationFolder.exists()) {
+                destinationFolder.mkdirs();
+            }
+
+            // д���ļ���Ŀ���ļ���
+            OutputStream outputStream = new FileOutputStream(destinationFolderPath + "config.yml");
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = inputStream.read(buffer)) > 0) {
+                outputStream.write(buffer, 0, length);
+            }
+
+            // �ر���
+            inputStream.close();
+            outputStream.close();
+
+            System.out.println("Created config");
+        } catch (IOException e) {
+            logger.warning("Error while creating config!!!");
+            e.printStackTrace();
         }
+        System.out.print("�Զ����ݣ���="+ReadYaml.readYamlBoolean("config/config.yml","Config.autoBackup.Enable"));
+
+
     }
 }
