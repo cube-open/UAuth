@@ -12,6 +12,9 @@ jar {
     manifest {
         attributes 'Main-Class': 'Main'
     }
+    from {
+        configurations.runtimeClasspath.getFiles().collect { it.isDirectory() ? it : zipTree(it) }
+    }
 }
 dependencies {
     testImplementation platform('org.junit:junit-bom:5.10.0')

@@ -17,20 +17,20 @@ public class Main {
     private static final Logger logger = Logger.getLogger(Main.class.getName());
     public static void main(String[] args) {
         try {
-            // ¶ÁÈ¡×ÊÔ´ÎÄ¼ş
+            // è¯»å–èµ„æºæ–‡ä»¶
             InputStream inputStream = Main.class.getClassLoader().getResourceAsStream("config.yml");
             if (inputStream == null) {
                 System.out.println("Can not find config!");
                 return;
             }
 
-            // ´´½¨Ä¿±êÎÄ¼ş¼Ğ
+            // åˆ›å»ºç›®æ ‡æ–‡ä»¶å¤¹
             File destinationFolder = new File(destinationFolderPath);
             if (!destinationFolder.exists()) {
                 destinationFolder.mkdirs();
             }
 
-            // Ğ´ÈëÎÄ¼şµ½Ä¿±êÎÄ¼ş¼Ğ
+            // å†™å…¥æ–‡ä»¶åˆ°ç›®æ ‡æ–‡ä»¶å¤¹
             OutputStream outputStream = new FileOutputStream(destinationFolderPath + "config.yml");
             byte[] buffer = new byte[1024];
             int length;
@@ -38,7 +38,7 @@ public class Main {
                 outputStream.write(buffer, 0, length);
             }
 
-            // ¹Ø±ÕÁ÷
+            // å…³é—­æµ
             inputStream.close();
             outputStream.close();
 
@@ -47,7 +47,7 @@ public class Main {
             logger.warning("Error while creating config!!!");
             e.printStackTrace();
         }
-        System.out.print("×Ô¶¯±¸·İ£¿£¬="+ReadYaml.readYamlBoolean("config/config.yml","Config.autoBackup.Enable"));
+        System.out.print("è‡ªåŠ¨å¤‡ä»½ï¼Ÿï¼Œ="+ReadYaml.readYamlBoolean("config/config.yml","Config.autoBackup.Enable"));
 
 
     }
