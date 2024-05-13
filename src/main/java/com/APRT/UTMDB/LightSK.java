@@ -1,3 +1,7 @@
+/*
+Java实现-启灵域界科技
+算法基于 aztice的JsonDB-LightSK
+ */
 package com.APRT.UTMDB;
 
 public class LightSK {
