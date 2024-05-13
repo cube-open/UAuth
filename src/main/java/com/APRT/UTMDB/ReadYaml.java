@@ -1,4 +1,4 @@
-package com.APRT;
+package com.APRT.UTMDB;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.FileInputStream;
@@ -75,7 +75,7 @@ public class ReadYaml {
         }
     }
     /*
-    //ÈçºÎµ÷ÓÃ£¿
+    //å¦‚ä½•è°ƒç”¨ï¼Ÿ
     public static void main(String[] args) {
         String stringValue = readYamlString("config/config.yml", "Config.autoBackup.Enable");
         System.out.println("String value: " + stringValue);

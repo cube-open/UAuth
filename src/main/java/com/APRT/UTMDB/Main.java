@@ -1,6 +1,6 @@
-package com.APRT;
+package com.APRT.UTMDB;
 import java.util.Scanner;
-import org.yaml.snakeyaml.DumperOptions;
+
 import org.yaml.snakeyaml.Yaml;
 
 import  java.io.*;
@@ -45,7 +45,7 @@ public class Main {
             logger.warning("Error while creating config!!!");
             e.printStackTrace();
         }
-        System.out.print("自动备份？，="+ReadYaml.readYamlBoolean("config/config.yml","Config.autoBackup.Enable"));
+        System.out.print("自动备份？，="+ ReadYaml.readYamlBoolean("config/config.yml","Config.autoBackup.Enable"));
 
 
     }
