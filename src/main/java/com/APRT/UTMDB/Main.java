@@ -110,6 +110,10 @@ public class Main {
                 }
                 System.out.print("Complete!");
             }
+            if(Cmd!="reload" && Cmd != "Version" && Cmd != "Ver" && Cmd != "exit"){
+                System.out.println("Wrong Command!");
+            }
+
 
 
         }
