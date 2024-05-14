@@ -4,6 +4,7 @@ JsonDB算法基于aztice的JsonDB
  */
 package com.APRT.UTMDB;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Scanner;
 import com.APRT.UTMDB.LLogger;
@@ -11,16 +12,45 @@ import org.yaml.snakeyaml.Yaml;
 import com.APRT.UTMDB.Dir;
 import com.APRT.UTMDB.LightSK;
 import  java.io.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
 
 public class Main {
+
+    public static boolean Status = true;
     String Cmd;
     String sourceFilePath = "src/main/resources/config.yml";
     static String destinationFolderPath = "config/";
     static Scanner in = new Scanner(System.in);
     private static final Logger logger = Logger.getLogger(Main.class.getName());
     public static void main(String[] args) {
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            System.out.println("Ctrl+C detected. Program will exit,all data may will broke.");
+            Status = false;
+        }));
+        Map<String, String> env = System.getenv();
+
+
+        // 打印操作系统信息
+        String osName = System.getProperty("os.name");
+        String osVersion = System.getProperty("os.version");
+        System.out.println("Operating System: " + osName + " " + osVersion);
+
+        // 打印Java版本
+        String javaVersion = System.getProperty("java.version");
+        System.out.println("Java Version: " + javaVersion);
+
+        // 打印运行时最大内存
+        long maxMemory = Runtime.getRuntime().maxMemory();
+        String maxMemoryStr = maxMemory == Long.MAX_VALUE ? "N/A" : String.valueOf(maxMemory);
+        System.out.println("Max Memory: " + maxMemoryStr);
+
+        // 打印运行时最小内存
+        long minMemory = Runtime.getRuntime().totalMemory();
+        String minMemoryStr = String.valueOf(minMemory);
+        System.out.println("Min Memory: " + minMemoryStr);
         Dir.mkdir(".\\","log");
         HashMap<String,Boolean> hashMap = new HashMap<>();
         Boolean CmdStatus = false;
@@ -69,8 +99,9 @@ public class Main {
         }
         System.out.println("Auto backup?,="+ ReadYaml.readYamlBoolean("config/config.yml","Config.autoBackup.Enable"));
         LLogger.LogRec("Server started!");
-        while(!Objects.equals(Cmd, "exit")){
 
+        while(true){
+            if(Status==false) break;
             System.out.print(">");
             Cmd = in.nextLine();
             System.out.println();
@@ -121,7 +152,7 @@ public class Main {
                     e.printStackTrace();
 
                 }
-                System.out.print("Complete!");
+                System.out.println("Complete!");
             }
             for (String key : hashMap.keySet()) {
                 if (Cmd!=null&&!key.equals(Cmd)) {
@@ -145,4 +176,5 @@ public class Main {
 
 
 }
+
 
