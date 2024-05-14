@@ -25,7 +25,7 @@ public class LLogger {
             }
 
             try (FileWriter writer = new FileWriter(logFile, true)) {
-                SimpleDateFormat dateFormat = new SimpleDateFormat("[yyyy MM dd-HH mmmin sssec] ");
+                SimpleDateFormat dateFormat = new SimpleDateFormat("[yyyy MM dd-HH mm ss] ");
                 String timestamp = dateFormat.format(new Date());
                 writer.write(timestamp + logContent + "\n");
             } catch (IOException e) {

@@ -37,6 +37,16 @@
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>3.3.0</version>
                 <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                            <mainClass>com.APRT.UTMDB.Main</mainClass>
+                        </manifest>
+                        <manifestEntries>
+                            <Main-Class>com.APRT.UTMDB.Main</Main-Class>
+                        </manifestEntries>
+                    </archive>
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
