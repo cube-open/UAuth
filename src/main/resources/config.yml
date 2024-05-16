@@ -1,6 +1,9 @@
 Config:
   autoBackup:
-    Enable: true
+    Enable: false
     time: 2000
   logPath: log\
   #请使用转义符号表示"."
+  key:
+    key:
+    enable: false
