@@ -1,7 +1,6 @@
-package com.APRT.UTMDB;
+package com.APRT.utmLogin;
 
 import java.io.File;
-import java.util.logging.Logger;
 
 public class Dir {
     public static void mkdir(String path, String dirName) {
