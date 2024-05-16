@@ -32,7 +32,7 @@ public class Main {
         }));
         Map<String, String> env = System.getenv();
 
-
+        System.out.println("UTM-Login-Backend now loading......");
         // 打印操作系统信息
         String osName = System.getProperty("os.name");
         String osVersion = System.getProperty("os.version");
@@ -53,6 +53,7 @@ public class Main {
         System.out.println("Min Memory: " + minMemoryStr);
         Dir.mkdir(".\\","log");
         HashMap<String,Boolean> hashMap = new HashMap<>();
+        System.out.println("Registering command......");
         Boolean CmdStatus = false;
         hashMap.put("exit",true);
         hashMap.put("reload",true);
