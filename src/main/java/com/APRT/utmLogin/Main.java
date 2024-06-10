@@ -48,7 +48,6 @@ public class Main {
         String minMemoryStr = String.valueOf(minMemory);
         System.out.println("Min Memory: " + minMemoryStr);
         Dir.mkdir(".","log");
-        LLogger.LogRec("Starting server!");
         String Cmd;
         try {
             // 读取资源文件
@@ -56,13 +55,11 @@ public class Main {
             if (inputStream == null) {
                 System.out.println("Can not find config!");
                 LLogger.LogRec("Can not find config!");
-
-                File destinationFolder = new File(destinationFolderPath);
-                if (!destinationFolder.exists()) {
-                    destinationFolder.mkdirs();
-                }
-
-                // 写入文件到目标文件夹
+                return;
+            }
+            File destinationFolder = new File(destinationFolderPath);
+            if (!destinationFolder.exists()) {
+                destinationFolder.mkdirs();
                 OutputStream outputStream = new FileOutputStream(destinationFolderPath + "config.yml");
                 byte[] buffer = new byte[1024];
                 int length;
@@ -76,10 +73,11 @@ public class Main {
 
                 System.out.println("Created config");
                 LLogger.LogRec("Created config");
-                return;
+                // 创建目标文件夹
             }
 
-            // 创建目标文件夹
+            // 写入文件到目标文件夹
+
 
         } catch (IOException e) {
             logger.warning("Error while creating config!!!");
@@ -143,11 +141,12 @@ public class Main {
                         System.out.println("Can not find config!");
                         LLogger.LogRec("Can not find config!");
                         File destinationFolder = new File(destinationFolderPath);
-                        if (!destinationFolder.exists()) {
-                            destinationFolder.mkdirs();
-                        }
 
-                        // 写入文件到目标文件夹
+                        return;
+                    }
+                    File destinationFolder = new File(destinationFolderPath);
+                    if (!destinationFolder.exists()) {
+                        destinationFolder.mkdirs();
                         OutputStream outputStream = new FileOutputStream(destinationFolderPath + "config.yml");
                         byte[] buffer = new byte[1024];
                         int length;
@@ -161,9 +160,8 @@ public class Main {
 
                         System.out.println("Created config");
                         LLogger.LogRec("Created config");
-                        return;
+                        // 创建目标文件夹
                     }
-
                     // 创建目标文件夹
 
                 } catch (IOException e) {
