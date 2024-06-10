@@ -18,7 +18,7 @@ import java.sql.SQLException;
 public class Main {
     Connection con;
     public static boolean Status = true;
-    private static String LightSK_Key = null;
+    private static String LightSK_Key;
     private static Boolean LightSK = false;
     String Cmd;
     String sourceFilePath = "src/main/resources/config.yml";
@@ -48,17 +48,8 @@ public class Main {
         String minMemoryStr = String.valueOf(minMemory);
         System.out.println("Min Memory: " + minMemoryStr);
         Dir.mkdir(".","log");
-        HashMap<String,Boolean> hashMap = new HashMap<>();
-        System.out.println("Registering command......");
-        Boolean CmdStatus = false;
-        hashMap.put("exit",true);
-        hashMap.put("reload",true);
-        hashMap.put("Ver",true);
-        hashMap.put("Version",true);
-        hashMap.put("logoff",true);
-        hashMap.put("version",true);
         LLogger.LogRec("Starting server!");
-        String Cmd = "-";
+        String Cmd;
         try {
             // 读取资源文件
             InputStream inputStream = Main.class.getClassLoader().getResourceAsStream("config.yml");
@@ -95,6 +86,15 @@ public class Main {
             LLogger.LogRec("Error while creating config!!!");
             e.printStackTrace();
         }
+        HashMap<String,Boolean> hashMap = new HashMap<>();
+        System.out.println("Registering command......");
+        Boolean CmdStatus = false;
+        hashMap.put("exit",true);
+        hashMap.put("reload",true);
+        hashMap.put("Ver",true);
+        hashMap.put("Version",true);
+        hashMap.put("logoff",true);
+        hashMap.put("version",true);
         System.out.println("Auto backup?="+ ReadYaml.readYamlBoolean("./config/config.yml","Config.autoBackup.Enable"));
         LightSK = ReadYaml.readYamlBoolean("./config/config.yml", "Config.key.enable");
         if (LightSK){
