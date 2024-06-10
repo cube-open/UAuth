@@ -140,7 +140,6 @@ public class Main {
                     if (inputStream == null) {
                         System.out.println("Can not find config!");
                         LLogger.LogRec("Can not find config!");
-                        File destinationFolder = new File(destinationFolderPath);
 
                         return;
                     }
@@ -189,6 +188,11 @@ public class Main {
                     LightSK_Key=ReadYaml.readYamlString("./config/config.yml","Config.key.key");
 
                 }
+                else{
+                    logger.warning("Error!LightSK is not enable!Server will not run.");
+                    System.exit(1);
+                }
+
                 LLogger.LogRec("Reloaded the server.");
                 System.out.println("Complete!");
 
