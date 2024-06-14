@@ -104,7 +104,7 @@ public class Main {
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
-                System.exit(1);
+                System.exit(-1);
             }
             LightSK_Key=ReadYaml.readYamlString("./config/config.yml","Config.key.key");
 
@@ -190,7 +190,7 @@ public class Main {
                 }
                 else{
                     logger.warning("Error!LightSK is not enable!Server will not run.");
-                    System.exit(1);
+                    System.exit(-1);
                 }
 
                 LLogger.LogRec("Reloaded the server.");
