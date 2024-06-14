@@ -93,6 +93,9 @@
             <artifactId>surefire-shared-utils</artifactId>
             <version>3.2.2</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/javax.websocket/javax.websocket-api -->
+
+
     </dependencies>
 
 </project>
