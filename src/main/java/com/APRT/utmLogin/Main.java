@@ -4,21 +4,20 @@ JsonDB算法基于aztice的JsonDB
  */
 package com.APRT.utmLogin;
 import org.apache.maven.surefire.shared.io.output.TeeOutputStream;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Scanner;
 import  java.io.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Logger;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+
 
 
 
 public class Main {
-    Connection con;
+
     public static boolean Status = true;
     private static String LightSK_Key;
     private static Boolean LightSK = false;
@@ -130,6 +129,13 @@ public class Main {
             System.err.println("LightSK is not enable,server wont start.");
             System.exit(0);
         }
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.submit(() -> {
+            webServer.con();
+
+        });
+        executor.shutdown();
+
         LLogger.LogRec("Server started!");
 
 
