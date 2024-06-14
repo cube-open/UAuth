@@ -128,7 +128,7 @@ public class Main {
             }
             if(Objects.equals(Cmd, "Ver") || Cmd.equals("Version") || Cmd.equals("version")){
                 System.out.println("""
-                        UTM-DB 1.0 SnapShot
+                        UTM-Login 1.0 SnapShot
                         By QiLingYuJie-John
                         Welcome!
                         """);
