@@ -127,7 +127,7 @@ public class Main {
 
         }
         else{
-            System.out.println("LightSK is not enable,server wont start.");
+            System.err.println("LightSK is not enable,server wont start.");
             System.exit(0);
         }
         LLogger.LogRec("Server started!");
