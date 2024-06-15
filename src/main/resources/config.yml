@@ -8,8 +8,8 @@ Config:
     key:
     enable: false
   sql:
-    db: test
-    url: localhost
+    db:
+    url:
     port:
     user:
     passwd:

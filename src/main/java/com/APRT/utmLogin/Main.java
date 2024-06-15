@@ -114,7 +114,7 @@ public class Main {
         if (LightSK){
             if (ReadYaml.readYamlString("./config/config.yml","Config.key.key")==null){
                 logger.warning("Key is null!Will not start server(key can't be like '123')!");
-                LLogger.LogRec("Key is null,Now stop server.");
+                LLogger.LogRec("Key is null,Now stopping server.");
                 try {
                     Thread.currentThread().sleep(500);
                 } catch (InterruptedException e) {

@@ -4,13 +4,17 @@ import java.sql.*;
 public class webServer {
 
     // MySQL数据库连接信息
-    //private static final String url = "jdbc:mysql://localhost:3306/testdb"; // 数据库URL
-    private static final String url = "jdbc:mysql://"+ReadYaml.readYamlString("config/config.yml","Config.sql.url") +ReadYaml.readYamlValue("config/config.yml","Config.sql.port") + "/" + ReadYaml.readYamlString("config/config.yml","Config.sql.db");
-    private static final String user = "root"; // 数据库用户名
-    private static final String password = "password"; // 数据库密码
+    private static final String url = "jdbc:mysql://"+ReadYaml.readYamlString("config/config.yml","Config.sql.url") +":"+ReadYaml.readYamlValue("config/config.yml","Config.sql.port") + "/" + ReadYaml.readYamlString("config/config.yml","Config.sql.db");
+    private static final String user = ReadYaml.readYamlString("config/config.yml","Config.sql.user"); // 数据库用户名
+    private static final String password = ReadYaml.readYamlString("config/config.yml","Config.sql.passwd");; // 数据库密码
 
     public static void con(){
         //sql连接，等待开发
+        if(user==null||password==null||ReadYaml.readYamlString("config/config.yml","Config.sql.url")==null||ReadYaml.readYamlValue("config/config.yml","Config.sql.port")==null||ReadYaml.readYamlString("config/config.yml","Config.sql.db")==null){
+            System.err.println("Sql connect info is wrong!Please check it.Stopping server......");
+            LLogger.LogRec("Sql connect info is wrong or null!Stopping server...");
+            System.exit(-1);
+        }
 
     }
     /*
