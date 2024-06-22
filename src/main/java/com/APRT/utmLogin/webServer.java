@@ -1,5 +1,13 @@
 package com.APRT.utmLogin;
 import java.sql.*;
+import com.sun.net.httpserver.HttpServer;
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.InetSocketAddress;
 
 public class webServer {
 
@@ -10,12 +18,15 @@ public class webServer {
 
     public static void con(){
         //sql连接，等待开发
+        System.out.println("Test sql server......");
+        LLogger.LogRec("Test sql server......");
         if(user==null||password==null||ReadYaml.readYamlString("config/config.yml","Config.sql.url")==null||ReadYaml.readYamlValue("config/config.yml","Config.sql.port")==null||ReadYaml.readYamlString("config/config.yml","Config.sql.db")==null){
             System.err.println("Sql connect info is wrong!Please check it.Stopping server......");
             LLogger.LogRec("Sql connect info is wrong or null!Stopping server...");
             System.exit(-1);
         }
-
+        System.out.println("Loading drivers......");
+        LLogger.LogRec("Loading drivers......");
     }
     /*
     // 建立数据库连接的私有辅助方法
