@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
+import java.util.logging.Logger;
 
 public class webServer {
 
@@ -16,17 +17,41 @@ public class webServer {
     private static final String user = ReadYaml.readYamlString("config/config.yml","Config.sql.user"); // 数据库用户名
     private static final String password = ReadYaml.readYamlString("config/config.yml","Config.sql.passwd");; // 数据库密码
 
-    public static void con(){
+    public static void con() {
         //sql连接，等待开发
         System.out.println("Test sql server......");
         LLogger.LogRec("Test sql server......");
-        if(user==null||password==null||ReadYaml.readYamlString("config/config.yml","Config.sql.url")==null||ReadYaml.readYamlValue("config/config.yml","Config.sql.port")==null||ReadYaml.readYamlString("config/config.yml","Config.sql.db")==null){
+        if (user == null || password == null || ReadYaml.readYamlString("config/config.yml", "Config.sql.url") == null || ReadYaml.readYamlValue("config/config.yml", "Config.sql.port") == null || ReadYaml.readYamlString("config/config.yml", "Config.sql.db") == null) {
             System.err.println("Sql connect info is wrong!Please check it.Stopping server......");
             LLogger.LogRec("Sql connect info is wrong or null!Stopping server...");
             System.exit(-1);
         }
         System.out.println("Loading drivers......");
         LLogger.LogRec("Loading drivers......");
+        try { // 加载数据库驱动类
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            System.out.println("Done!");
+            LLogger.LogRec("Done!");
+        } catch (ClassNotFoundException e) {
+            Logger.getLogger("this").warning("Error!Failed to load drivers!");
+            LLogger.LogRec("Error!Failed to load drivers!");
+            e.printStackTrace();
+            System.exit(-1);
+        }
+
+        try {
+            //连接mariadb/mysql
+            DriverManager.getConnection(url, user, password);
+            System.out.println("Connected successful");
+            LLogger.LogRec("Connected successful");
+        } catch (SQLException e) {
+            LLogger.LogRec("Error while connecting mysql!");
+            LLogger.LogRec(String.valueOf(new RuntimeException(e)));
+            System.out.println(String.valueOf((new RuntimeException())));
+            System.exit(-1);
+            throw new RuntimeException(e);
+
+        }
     }
     /*
     // 建立数据库连接的私有辅助方法
