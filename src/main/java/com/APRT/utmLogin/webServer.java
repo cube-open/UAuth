@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
+import java.util.Arrays;
 import java.util.logging.Logger;
 
 public class webServer {
@@ -35,6 +36,7 @@ public class webServer {
         } catch (ClassNotFoundException e) {
             Logger.getLogger("this").warning("Error!Failed to load drivers!");
             LLogger.LogRec("Error!Failed to load drivers!");
+            LLogger.LogRec(Arrays.toString(e.getStackTrace()));
             e.printStackTrace();
             System.exit(-1);
         }
@@ -45,11 +47,12 @@ public class webServer {
             System.out.println("Connected successful");
             LLogger.LogRec("Connected successful");
         } catch (SQLException e) {
+            Logger.getLogger("this").warning("Error while connecting mysql!");
             LLogger.LogRec("Error while connecting mysql!");
-            LLogger.LogRec(String.valueOf(new RuntimeException(e)));
-            System.out.println(String.valueOf((new RuntimeException())));
+            LLogger.LogRec(Arrays.toString(e.getStackTrace()));
+            e.printStackTrace();
             System.exit(-1);
-            throw new RuntimeException(e);
+
 
         }
     }

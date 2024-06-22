@@ -1,6 +1,0 @@
-Config:
-  autoBackup:
-    Enable: true
-    time: 2000
-  logPath: log\
-  #请使用转义符号表示"."
