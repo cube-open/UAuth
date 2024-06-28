@@ -26,6 +26,7 @@ public class Main {
     static String destinationFolderPath = "config/";
     static Scanner in = new Scanner(System.in);
     private static final Logger logger = Logger.getLogger(Main.class.getName());
+
     public static void main(String[] args) {
         String logFileName = "application.log";
 
@@ -109,7 +110,7 @@ public class Main {
         hashMap.put("Version",true);
         hashMap.put("logoff",true);
         hashMap.put("version",true);
-        System.out.println("Auto backup?="+ ReadYaml.readYamlBoolean("./config/config.yml","Config.autoBackup.Enable"));
+        System.out.println("Auto backup="+ ReadYaml.readYamlBoolean("./config/config.yml","Config.autoBackup.Enable"));
         LightSK = ReadYaml.readYamlBoolean("./config/config.yml", "Config.key.enable");
         if (LightSK){
             if (ReadYaml.readYamlString("./config/config.yml","Config.key.key")==null){

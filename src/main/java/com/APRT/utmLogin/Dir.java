@@ -16,7 +16,7 @@ public class Dir {
                 LLogger.LogRec("failed to create dir at" + dirPath+dirName);
             }
         } else {
-            System.out.println("Already in there");
+            System.out.println("File already in right places!");
         }
     }
 
