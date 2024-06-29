@@ -94,6 +94,11 @@ public class webServer {
                }
 
                System.out.println("Retrying"+FailCount+"/10"+"......");
+               try {
+                   Thread.currentThread().sleep(1500);
+               } catch (InterruptedException ex) {
+                   throw new RuntimeException(ex);
+               }
                password = ReadYaml.readYamlString("config/config.yml","Config.sql.passwd");
                user = ReadYaml.readYamlString("config/config.yml","Config.sql.user");
                url = "jdbc:mysql://"+ReadYaml.readYamlString("config/config.yml","Config.sql.url") +":"+ReadYaml.readYamlValue("config/config.yml","Config.sql.port") + "/" + ReadYaml.readYamlString("config/config.yml","Config.sql.db");
