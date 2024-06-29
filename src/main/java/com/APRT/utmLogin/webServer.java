@@ -15,9 +15,9 @@ public class webServer {
     private static int FailCount = 0;
     static int retry_count = 5;
     // MySQL数据库连接信息
-    private static final String url = "jdbc:mysql://"+ReadYaml.readYamlString("config/config.yml","Config.sql.url") +":"+ReadYaml.readYamlValue("config/config.yml","Config.sql.port") + "/" + ReadYaml.readYamlString("config/config.yml","Config.sql.db");
-    private static final String user = ReadYaml.readYamlString("config/config.yml","Config.sql.user"); // 数据库用户名
-    private static final String password = ReadYaml.readYamlString("config/config.yml","Config.sql.passwd");; // 数据库密码
+    private static String url = "jdbc:mysql://"+ReadYaml.readYamlString("config/config.yml","Config.sql.url") +":"+ReadYaml.readYamlValue("config/config.yml","Config.sql.port") + "/" + ReadYaml.readYamlString("config/config.yml","Config.sql.db");
+    private static  String user = ReadYaml.readYamlString("config/config.yml","Config.sql.user"); // 数据库用户名
+    private static  String password = ReadYaml.readYamlString("config/config.yml","Config.sql.passwd");; // 数据库密码
 
     public static void con() {
         //sql连接，等待开发
@@ -39,7 +39,7 @@ public class webServer {
             LLogger.LogRec("Error!Failed to load drivers!");
             LLogger.LogRec(Arrays.toString(e.getStackTrace()));
             System.out.println("Get more information at kernel.log!");
-            System.out.println("Cause by: "+e.getCause());
+            System.out.println("Cause by: " + e.getCause()+ " " + e.getMessage());
             System.exit(-1);
             throw new RuntimeException(e);
 
@@ -61,10 +61,20 @@ public class webServer {
                LLogger.LogRec("Error while connecting mysql!");
                retry_count = 5;
                LLogger.LogRec(Arrays.toString(e.getStackTrace()));
+               LLogger.LogRec("Message: "+e.getMessage());
                FailCount++;
                System.out.println();
                System.out.println("Get more information at kernel.log!");
                System.out.println("Cause by: "+e.getCause());
+               System.out.println("Full trace:");
+               System.out.println("--------------------------");
+               System.out.println();
+               System.out.println("trace: "+e.getStackTrace());
+               System.out.println("--------------------------");
+               System.out.println();
+               System.out.println("Message: "+e.getMessage());
+               System.out.println();
+               System.out.println("--------------------------");
                if (FailCount>10){
                    System.out.println("Test failed!Stopping server......");
                    System.exit(-1);
@@ -82,6 +92,9 @@ public class webServer {
                }
 
                System.out.println("Retrying"+FailCount+"/10"+"......");
+               password = ReadYaml.readYamlString("config/config.yml","Config.sql.passwd");
+               user = ReadYaml.readYamlString("config/config.yml","Config.sql.user");
+               url = "jdbc:mysql://"+ReadYaml.readYamlString("config/config.yml","Config.sql.url") +":"+ReadYaml.readYamlValue("config/config.yml","Config.sql.port") + "/" + ReadYaml.readYamlString("config/config.yml","Config.sql.db");
                LLogger.LogRec("Retrying to connect mysql......");
            }
        }

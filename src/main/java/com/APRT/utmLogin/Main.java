@@ -98,7 +98,7 @@ public class Main {
             logger.warning("Error while creating config!!!");
             LLogger.LogRec("Error while creating config!!!");
             LLogger.LogRec(Arrays.toString(e.getStackTrace()));
-            System.out.println("Cause by: " + e.getCause());
+            System.out.println("Cause by: " + e.getCause()+ " " + e.getMessage());
         }
         HashMap<String,Boolean> hashMap = new HashMap<>();
         System.out.println("Registering command......");
@@ -185,7 +185,7 @@ public class Main {
                     logger.warning("Error while creating config!!!");
                     LLogger.LogRec("Error while creating config!!!");
                     LLogger.LogRec(Arrays.toString(e.getStackTrace()));
-                    System.out.println("Cause by: " + e.getCause());
+                    System.out.println("Cause by: " + e.getCause()+ " " + e.getMessage());
 
                 }
 
