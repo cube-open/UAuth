@@ -69,7 +69,8 @@ public class webServer {
                System.out.println("Full trace:");
                System.out.println("--------------------------");
                System.out.println();
-               System.out.println("trace: "+e.getStackTrace());
+               System.out.println("trace: ");
+               e.printStackTrace();
                System.out.println("--------------------------");
                System.out.println();
                System.out.println("Message: "+e.getMessage());
