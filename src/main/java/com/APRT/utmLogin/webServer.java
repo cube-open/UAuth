@@ -52,7 +52,8 @@ public class webServer {
                 System.out.println("User: "+user);
                 System.out.println("Password: "+password);
                //连接mariadb/mysql
-               DriverManager.getConnection(url, user, password);
+               Connection connection =  DriverManager.getConnection(url, user, password);
+               System.out.println("Mysql connector loaded at: " + connection);
                System.out.println("Connected successful");
                LLogger.LogRec("Connected successful");
                break;
