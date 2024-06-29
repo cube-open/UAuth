@@ -30,9 +30,10 @@ public class webServer {
         System.out.println("Loading drivers......");
         LLogger.LogRec("Loading drivers......");
         try { // 加载数据库驱动类
-            Class.forName("com.mysql.cj.jdbc.Driver");
+            Class.forName("com.mysql.jdbc.Driver");
             System.out.println("Done!");
             LLogger.LogRec("Done!");
+
         } catch (ClassNotFoundException e) {
             Logger.getLogger("this").warning("Error!Failed to load drivers!");
             LLogger.LogRec("Error!Failed to load drivers!");
@@ -42,6 +43,7 @@ public class webServer {
         }
 
         try {
+            System.out.println("Trying to connect mysql server......");
             //连接mariadb/mysql
             DriverManager.getConnection(url, user, password);
             System.out.println("Connected successful");
