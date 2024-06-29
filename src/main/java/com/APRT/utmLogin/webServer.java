@@ -12,7 +12,8 @@ import java.util.Arrays;
 import java.util.logging.Logger;
 
 public class webServer {
-
+    private static int FailCount = 0;
+    static int retry_count = 5;
     // MySQL数据库连接信息
     private static final String url = "jdbc:mysql://"+ReadYaml.readYamlString("config/config.yml","Config.sql.url") +":"+ReadYaml.readYamlValue("config/config.yml","Config.sql.port") + "/" + ReadYaml.readYamlString("config/config.yml","Config.sql.db");
     private static final String user = ReadYaml.readYamlString("config/config.yml","Config.sql.user"); // 数据库用户名
@@ -29,34 +30,61 @@ public class webServer {
         }
         System.out.println("Loading drivers......");
         LLogger.LogRec("Loading drivers......");
-        try { // 加载数据库驱动类
-            Class.forName("com.mysql.jdbc.Driver");
-            System.out.println("Done!");
-            LLogger.LogRec("Done!");
-
-        } catch (ClassNotFoundException e) {
+        Driver driver = null;
+        try {
+            driver = new com.mysql.jdbc.Driver();
+            DriverManager.registerDriver(driver);
+        } catch (SQLException e) {
             Logger.getLogger("this").warning("Error!Failed to load drivers!");
             LLogger.LogRec("Error!Failed to load drivers!");
             LLogger.LogRec(Arrays.toString(e.getStackTrace()));
-            e.printStackTrace();
+            System.out.println("Get more information at kernel.log!");
+            System.out.println("Cause by: "+e.getCause());
             System.exit(-1);
+            throw new RuntimeException(e);
+
         }
 
-        try {
-            System.out.println("Trying to connect mysql server......");
-            //连接mariadb/mysql
-            DriverManager.getConnection(url, user, password);
-            System.out.println("Connected successful");
-            LLogger.LogRec("Connected successful");
-        } catch (SQLException e) {
-            Logger.getLogger("this").warning("Error while connecting mysql!");
-            LLogger.LogRec("Error while connecting mysql!");
-            LLogger.LogRec(Arrays.toString(e.getStackTrace()));
-            e.printStackTrace();
-            System.exit(-1);
 
+       while (true){
+           try {
+               System.out.println("Trying to connect mysql server at "+url+" ......");
+                System.out.println("User: "+user);
+                System.out.println("Password: "+password);
+               //连接mariadb/mysql
+               DriverManager.getConnection(url, user, password);
+               System.out.println("Connected successful");
+               LLogger.LogRec("Connected successful");
+               break;
+           } catch (SQLException e) {
+               Logger.getLogger("this").warning("Error while connecting mysql!");
+               LLogger.LogRec("Error while connecting mysql!");
+               retry_count = 5;
+               LLogger.LogRec(Arrays.toString(e.getStackTrace()));
+               FailCount++;
+               System.out.println();
+               System.out.println("Get more information at kernel.log!");
+               System.out.println("Cause by: "+e.getCause());
+               if (FailCount>10){
+                   System.out.println("Test failed!Stopping server......");
+                   System.exit(-1);
+               }
+               while (retry_count>=0){
 
-        }
+                   System.out.println("Server will try again after "+retry_count+" seconds.");
+                   retry_count--;
+                   try {
+                       Thread.currentThread().sleep(1000);
+                   } catch (InterruptedException ex) {
+                       throw new RuntimeException(ex);
+
+                   }
+               }
+
+               System.out.println("Retrying"+FailCount+"/10"+"......");
+               LLogger.LogRec("Retrying to connect mysql......");
+           }
+       }
     }
     /*
     // 建立数据库连接的私有辅助方法

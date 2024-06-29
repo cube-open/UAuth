@@ -1,10 +1,13 @@
 package com.APRT.utmLogin;
 
+import javax.sql.rowset.spi.SyncFactoryException;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import static javax.sql.rowset.spi.SyncFactory.getLogger;
 
 
 public class LLogger {
@@ -13,13 +16,18 @@ public class LLogger {
         String logFilePath = ReadYaml.readYamlString("config/config.yml", "Config.logPath");
 
         if (logFilePath != null) {
-            File logFile = new File(logFilePath + "/log.log");
+            File logFile = new File(logFilePath + "/kernel.log");
             if (!logFile.exists()) {
                 try {
                     File logDir = new File(logFilePath);
                     logDir.mkdirs();
                     logFile.createNewFile();
                 } catch (IOException e) {
+                    try {
+                        getLogger().warning("Error!");
+                    } catch (SyncFactoryException ex) {
+                        throw new RuntimeException(ex);
+                    }
                     e.printStackTrace();
                 }
             }
@@ -29,6 +37,11 @@ public class LLogger {
                 String timestamp = dateFormat.format(new Date());
                 writer.write(timestamp + logContent + "\n");
             } catch (IOException e) {
+                try {
+                    getLogger().warning("Error!");
+                } catch (SyncFactoryException ex) {
+                    throw new RuntimeException(ex);
+                }
                 e.printStackTrace();
             }
         } else {

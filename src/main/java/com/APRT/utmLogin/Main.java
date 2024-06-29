@@ -4,10 +4,8 @@ JsonDB算法基于aztice的JsonDB
  */
 package com.APRT.utmLogin;
 import org.apache.maven.surefire.shared.io.output.TeeOutputStream;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Scanner;
+
+import java.util.*;
 import  java.io.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -28,7 +26,7 @@ public class Main {
     private static final Logger logger = Logger.getLogger(Main.class.getName());
 
     public static void main(String[] args) {
-        String logFileName = "application.log";
+        String logFileName = "latest.log";
 
         try {
             // 创建日志文件输出流
@@ -99,7 +97,8 @@ public class Main {
         } catch (IOException e) {
             logger.warning("Error while creating config!!!");
             LLogger.LogRec("Error while creating config!!!");
-            e.printStackTrace();
+            LLogger.LogRec(Arrays.toString(e.getStackTrace()));
+            System.out.println("Cause by: " + e.getCause());
         }
         HashMap<String,Boolean> hashMap = new HashMap<>();
         System.out.println("Registering command......");
@@ -130,12 +129,7 @@ public class Main {
             System.err.println("LightSK is not enable,server wont start.");
             System.exit(0);
         }
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.submit(() -> {
-            webServer.con();
-
-        });
-        executor.shutdown();
+        webServer.con();
 
         LLogger.LogRec("Server started!");
 
@@ -190,7 +184,8 @@ public class Main {
                 } catch (IOException e) {
                     logger.warning("Error while creating config!!!");
                     LLogger.LogRec("Error while creating config!!!");
-                    e.printStackTrace();
+                    LLogger.LogRec(Arrays.toString(e.getStackTrace()));
+                    System.out.println("Cause by: " + e.getCause());
 
                 }
 
