@@ -109,12 +109,12 @@ public class Main {
         }
         System.out.println("Registering command......");
         Boolean CmdStatus = false;
-        hashMap.put("exit",true);
-        hashMap.put("reload",true);
-        hashMap.put("Ver",true);
-        hashMap.put("Version",true);
-        hashMap.put("version",true);
-        hashMap.put("help",true);
+        RegCommand("exit");
+        RegCommand("reload");
+        RegCommand("Ver");
+        RegCommand("Version");
+        RegCommand("version");
+        RegCommand("help");
         System.out.println("Auto backup="+ ReadYaml.readYamlBoolean("./config/config.yml","Config.autoBackup.Enable"));
         LightSK = ReadYaml.readYamlBoolean("./config/config.yml", "Config.key.enable");
         if (LightSK){
@@ -258,7 +258,7 @@ public class Main {
 
     }
 
-    public void RegCommand(String string){
+    public static void RegCommand(String string){
         try {
             hashMap.put(string,true);
         }catch (Exception exception){
