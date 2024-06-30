@@ -136,7 +136,11 @@ public class Main {
             System.exit(0);
         }
         sqlServer.con();
-
+        if(ReadYaml.readYamlValue("config/config.yml","Config.web.port")==null){
+            logger.warning("Error!Web server listen port is null!");
+            LLogger.LogRec("Web server listen port is null!");
+            System.exit(-1);
+        }
         LLogger.LogRec("Server started!");
 
 
