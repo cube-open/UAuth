@@ -9,18 +9,20 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.util.Arrays;
+import java.util.concurrent.ExecutorService;
 import java.util.logging.Logger;
-;
 
 public class webServer implements HttpHandler {
     //http通讯，等待开发中。
-    HttpServer server = null;
-    private int port = (int) ReadYaml.readYamlValue("config/config,yml","Config.web.port");
-   public void webStart(){
+
+   public static HttpServer server = null;
+    private static int port = (int) ReadYaml.readYamlValue("config/config.yml","Config.web.port");
+   public static void webStart(){
        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
            if(server!=null){
                System.out.println("Stopping web server......");
                server.stop(0);
+
            }
 
        }));
@@ -31,7 +33,11 @@ public class webServer implements HttpHandler {
            server = HttpServer.create(new InetSocketAddress(port), 0);
            server.createContext("/");
            server.setExecutor(null);
-           server.start();
+
+
+               server.start();
+
+
            System.out.println("Started web server!");
            LLogger.LogRec("Done!");
        } catch (IOException e) {
@@ -53,6 +59,7 @@ public class webServer implements HttpHandler {
            System.out.println();
            System.out.println("--------------------------");
            System.out.println("Now stopping server......");
+           System.exit(-1);
            throw new RuntimeException(e);
        }
 

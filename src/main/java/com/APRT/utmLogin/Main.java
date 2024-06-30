@@ -8,6 +8,7 @@ import org.apache.maven.surefire.shared.io.output.TeeOutputStream;
 
 import java.io.*;
 import java.util.*;
+
 import java.util.logging.Logger;
 
 
@@ -141,6 +142,8 @@ public class Main {
             LLogger.LogRec("Web server listen port is null!");
             System.exit(-1);
         }
+
+        webServer.webStart();
         LLogger.LogRec("Server started!");
 
 
@@ -231,6 +234,9 @@ public class Main {
                 }
                 System.out.println("Try to connect mysql server......");
                 sqlServer.con();
+                System.out.println("Restart web server......");
+                webServer.server.stop(0);
+                webServer.webStart();
                 LLogger.LogRec("Reloaded the server.");
                 System.out.println("Complete!");
 
