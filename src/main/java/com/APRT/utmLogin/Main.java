@@ -115,6 +115,7 @@ public class Main {
         hashMap.put("Ver",true);
         hashMap.put("Version",true);
         hashMap.put("version",true);
+        hashMap.put("help",true);
         System.out.println("Auto backup="+ ReadYaml.readYamlBoolean("./config/config.yml","Config.autoBackup.Enable"));
         LightSK = ReadYaml.readYamlBoolean("./config/config.yml", "Config.key.enable");
         if (LightSK){
