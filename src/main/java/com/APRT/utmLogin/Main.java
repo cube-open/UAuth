@@ -32,7 +32,7 @@ public class Main {
             System.out.println("Stopping server......");
             if (scanner != null) {
                 scanner.close();
-                System.out.println("Scanner is closed");
+                System.out.println("Scanner was closed");
             }
 
         }));
