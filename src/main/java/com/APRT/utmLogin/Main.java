@@ -31,6 +31,7 @@ public class Main {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             System.out.println("Stopping server......");
             if (scanner != null) {
+                System.out.println("Closing scanner......");
                 scanner.close();
                 System.out.println("Scanner was closed");
             }
