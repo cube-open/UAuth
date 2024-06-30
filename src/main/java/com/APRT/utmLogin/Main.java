@@ -7,8 +7,6 @@ import org.apache.maven.surefire.shared.io.output.TeeOutputStream;
 
 import java.util.*;
 import  java.io.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
 
@@ -137,7 +135,7 @@ public class Main {
             System.err.println("LightSK is not enable,server wont start.");
             System.exit(0);
         }
-        webServer.con();
+        sqlServer.con();
 
         LLogger.LogRec("Server started!");
 

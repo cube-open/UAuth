@@ -1,17 +1,10 @@
 package com.APRT.utmLogin;
 import java.sql.*;
-import com.sun.net.httpserver.HttpServer;
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
-import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.InetSocketAddress;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
-public class webServer {
+public class sqlServer {
     private static int FailCount = 0;
     static int retry_count = 5;
     // MySQL数据库连接信息
