@@ -23,7 +23,7 @@ public class Main {
     static String destinationFolderPath = "config/";
     static Scanner in = new Scanner(System.in);
     private static final Logger logger = Logger.getLogger(Main.class.getName());
-
+    private static HashMap<String,Boolean> hashMap = new HashMap<>();
     public static void main(String[] args) {
         String logFileName = "latest.log";
         Scanner scanner = new Scanner(System.in);
@@ -48,7 +48,7 @@ public class Main {
         }
 
         // 输出一些日志信息和控制台输出
-        Map<String, String> env = System.getenv();
+
 
         System.out.println("UTM-Login now loading......");
         // 打印操作系统信息
@@ -107,7 +107,6 @@ public class Main {
             LLogger.LogRec(Arrays.toString(e.getStackTrace()));
             System.out.println("Cause by: " + e.getCause()+ " " + e.getMessage());
         }
-        HashMap<String,Boolean> hashMap = new HashMap<>();
         System.out.println("Registering command......");
         Boolean CmdStatus = false;
         hashMap.put("exit",true);
@@ -259,7 +258,18 @@ public class Main {
 
     }
 
+    public void RegCommand(String string){
+        try {
+            hashMap.put(string,true);
+        }catch (Exception exception){
+            System.out.println("Reg command failed!Because: "+ exception.getMessage());
+            LLogger.LogRec("Reg command failed!Because: "+ exception.getMessage());
+            exception.printStackTrace();
+            throw exception;
+        }
 
+
+    }
 }
 
 
