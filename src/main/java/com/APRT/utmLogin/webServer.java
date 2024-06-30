@@ -32,11 +32,7 @@ public class webServer implements HttpHandler {
            server = HttpServer.create(new InetSocketAddress(port), 0);
            server.createContext("/");
            server.setExecutor(null);
-
-
                server.start();
-
-
            System.out.println("Started web server!");
            LLogger.LogRec("Done!");
        } catch (IOException e) {
