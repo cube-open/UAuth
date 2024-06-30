@@ -66,6 +66,7 @@ public class webServer implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         if ("POST".equals(exchange.getRequestMethod())) {
+            // 处理POST请求的逻辑
             InputStream requestBody = exchange.getRequestBody();
             // 处理接收到的JSON数据
             String requestJson = new String(requestBody.readAllBytes());
@@ -78,9 +79,16 @@ public class webServer implements HttpHandler {
             OutputStream outputStream = exchange.getResponseBody();
             outputStream.write(responseJson.getBytes());
             outputStream.close();
+        } else if ("GET".equals(exchange.getRequestMethod())) {
+            // 处理GET请求的逻辑
+            String redirectUrl = "about:blank"; // 重定向URL
+            exchange.getResponseHeaders().set("Location", redirectUrl);
+            exchange.sendResponseHeaders(301, -1); // 发送302重定向响应码
+            exchange.close();
         } else {
-            // 如果不是POST请求，返回403错误
+            // 如果不是POST或GET请求，返回403错误
             exchange.sendResponseHeaders(403, 0);
         }
     }
-}
+    }
+
