@@ -114,7 +114,6 @@ public class Main {
         hashMap.put("reload",true);
         hashMap.put("Ver",true);
         hashMap.put("Version",true);
-        hashMap.put("logoff",true);
         hashMap.put("version",true);
         System.out.println("Auto backup="+ ReadYaml.readYamlBoolean("./config/config.yml","Config.autoBackup.Enable"));
         LightSK = ReadYaml.readYamlBoolean("./config/config.yml", "Config.key.enable");
@@ -156,6 +155,14 @@ public class Main {
                         UTM-Login 1.0 SnapShot
                         By QiLingYuJie-John
                         Welcome!
+                        """);
+            }
+            if(Objects.equals(Cmd, "help")||Objects.equals(Cmd, "?")) {
+                System.out.println("""
+                        Help menu
+                        "exit" stop server
+                        "reload" reload server and test mysql again
+                        "Ver","Version","version" show server version
                         """);
             }
             if(Objects.equals(Cmd, "reload")) {

@@ -89,9 +89,14 @@ public class sqlServer {
                //连接mariadb/mysql
                connection =  DriverManager.getConnection(url, user, password);
                System.out.println("Mysql connector loaded at: " + connection);
+               LLogger.LogRec("Mysql connector loaded at: " + connection);
                System.out.println("test connected successful");
                LLogger.LogRec("test connected successful");
+               System.out.println("Closing connect ......");
+               LLogger.LogRec("Closing connect ......");
                connection.close();
+               LLogger.LogRec("Done");
+               System.out.println("Done");
                break;
            } catch (SQLException e) {
                Logger.getLogger("this").warning("Error while connecting mysql!");
