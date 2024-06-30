@@ -27,7 +27,15 @@ public class Main {
 
     public static void main(String[] args) {
         String logFileName = "latest.log";
+        Scanner scanner = new Scanner(System.in);
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            System.out.println("Stopping server......");
+            if (scanner != null) {
+                scanner.close();
+                System.out.println("Scanner is closed");
+            }
 
+        }));
         try {
             // 创建日志文件输出流
             FileOutputStream logOutputStream = new FileOutputStream(logFileName);

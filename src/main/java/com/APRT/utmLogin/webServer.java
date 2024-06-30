@@ -18,9 +18,44 @@ public class webServer {
     private static String url = "jdbc:mysql://"+ReadYaml.readYamlString("config/config.yml","Config.sql.url") +":"+ReadYaml.readYamlValue("config/config.yml","Config.sql.port") + "/" + ReadYaml.readYamlString("config/config.yml","Config.sql.db");
     private static  String user = ReadYaml.readYamlString("config/config.yml","Config.sql.user"); // 数据库用户名
     private static  String password = ReadYaml.readYamlString("config/config.yml","Config.sql.passwd");; // 数据库密码
-
+    private static Connection connection;
     public static void con() {
         //sql连接，等待开发
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+
+
+            if (connection!=null) {
+                System.out.println("Stopping connection");
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    Logger.getLogger("this").warning("Error while disconnecting mysql!");
+                    LLogger.LogRec("Error while disconnecting mysql!");
+                    LLogger.LogRec(Arrays.toString(e.getStackTrace()));
+                    LLogger.LogRec("Message: "+e.getMessage());
+                    FailCount++;
+                    System.out.println();
+                    System.out.println("Get more information at kernel.log!");
+                    System.out.println("Cause by: "+e.getCause());
+                    System.out.println();
+                    System.out.println("SQL State: " + e.getSQLState());
+                    System.out.println("--------------------------");
+                    System.out.println();
+                    System.out.println("trace: "+e.getStackTrace());
+                    e.printStackTrace();
+                    System.out.println("--------------------------");
+                    System.out.println();
+                    System.out.println("Message: "+e.getMessage());
+                    System.out.println();
+                    System.out.println("--------------------------");
+                    System.out.println("Now server ignore this problem!");
+                    throw new RuntimeException(e);
+
+                }
+                System.out.println("Connection was closed");
+            }
+
+        }));
         System.out.println("Test sql server......");
         LLogger.LogRec("Test sql server......");
         if (user == null || password == null || ReadYaml.readYamlString("config/config.yml", "Config.sql.url") == null || ReadYaml.readYamlValue("config/config.yml", "Config.sql.port") == null || ReadYaml.readYamlString("config/config.yml", "Config.sql.db") == null) {
@@ -34,6 +69,8 @@ public class webServer {
         try {
             driver = new com.mysql.jdbc.Driver();
             DriverManager.registerDriver(driver);
+            System.out.println("Done!");
+            LLogger.LogRec("Done!");
         } catch (SQLException e) {
             Logger.getLogger("this").warning("Error!Failed to load drivers!");
             LLogger.LogRec("Error!Failed to load drivers!");
@@ -52,7 +89,7 @@ public class webServer {
                 System.out.println("User: "+user);
                 System.out.println("Password: "+password);
                //连接mariadb/mysql
-               Connection connection =  DriverManager.getConnection(url, user, password);
+               connection =  DriverManager.getConnection(url, user, password);
                System.out.println("Mysql connector loaded at: " + connection);
                System.out.println("Connected successful");
                LLogger.LogRec("Connected successful");
@@ -67,10 +104,11 @@ public class webServer {
                System.out.println();
                System.out.println("Get more information at kernel.log!");
                System.out.println("Cause by: "+e.getCause());
-               System.out.println("Full trace:");
+               System.out.println();
+               System.out.println("SQL State: " + e.getSQLState());
                System.out.println("--------------------------");
                System.out.println();
-               System.out.println("trace: ");
+               System.out.println("trace: "+e.getStackTrace());
                e.printStackTrace();
                System.out.println("--------------------------");
                System.out.println();
@@ -105,6 +143,8 @@ public class webServer {
                LLogger.LogRec("Retrying to connect mysql......");
            }
        }
+    }
+
     }
     /*
     // 建立数据库连接的私有辅助方法
@@ -175,4 +215,3 @@ public class webServer {
     }
 
      */
-}
