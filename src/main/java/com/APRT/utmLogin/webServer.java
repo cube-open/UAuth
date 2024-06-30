@@ -83,7 +83,7 @@ public class webServer implements HttpHandler {
             // 处理GET请求的逻辑
             String redirectUrl = "about:blank"; // 重定向URL
             exchange.getResponseHeaders().set("Location", redirectUrl);
-            exchange.sendResponseHeaders(301, -1); // 发送302重定向响应码
+            exchange.sendResponseHeaders(301, -1); // 发送301重定向响应码
             exchange.close();
         } else {
             // 如果不是POST或GET请求，返回403错误
