@@ -218,7 +218,8 @@ public class Main {
                     logger.warning("Error!LightSK is not enable!Server will not run.");
                     System.exit(-1);
                 }
-
+                System.out.println("Try to connect mysql server......");
+                sqlServer.con();
                 LLogger.LogRec("Reloaded the server.");
                 System.out.println("Complete!");
 

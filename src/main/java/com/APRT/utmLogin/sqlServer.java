@@ -16,7 +16,7 @@ public class sqlServer {
     private static  String password = ReadYaml.readYamlString("config/config.yml","Config.sql.passwd");; // 数据库密码
     private static Connection connection;
     public static void con() {
-        //sql连接，等待开发
+
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 
 
@@ -89,8 +89,9 @@ public class sqlServer {
                //连接mariadb/mysql
                connection =  DriverManager.getConnection(url, user, password);
                System.out.println("Mysql connector loaded at: " + connection);
-               System.out.println("Connected successful");
-               LLogger.LogRec("Connected successful");
+               System.out.println("test connected successful");
+               LLogger.LogRec("test connected successful");
+               connection.close();
                break;
            } catch (SQLException e) {
                Logger.getLogger("this").warning("Error while connecting mysql!");
