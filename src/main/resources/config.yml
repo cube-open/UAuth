@@ -5,13 +5,14 @@ Config:
   logPath: log\
   #请使用转义符号表示"."
   key:
-    key:
+    key: ''
     enable: false
   sql:
-    db:
-    url:
+    db: ''
+    url: ''
     port:
-    user:
-    passwd:
+    user: ''
+    passwd: ''
+    queryString: ''
   web:
     port:

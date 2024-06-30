@@ -56,6 +56,9 @@ public class webServer {
             }
 
         }));
+        if (ReadYaml.readYamlString("config/config.yml", "Config.sql.queryString") != null){
+            url=url+ReadYaml.readYamlString("config/config.yml", "Config.sql.queryString");
+        }
         System.out.println("Test sql server......");
         LLogger.LogRec("Test sql server......");
         if (user == null || password == null || ReadYaml.readYamlString("config/config.yml", "Config.sql.url") == null || ReadYaml.readYamlValue("config/config.yml", "Config.sql.port") == null || ReadYaml.readYamlString("config/config.yml", "Config.sql.db") == null) {
@@ -122,6 +125,9 @@ public class webServer {
                while (retry_count>=0){
 
                    System.out.println("Server will try again after "+retry_count+" seconds.");
+                   if (ReadYaml.readYamlString("config/config.yml", "Config.sql.queryString") != null){
+                       url=url+ReadYaml.readYamlString("config/config.yml", "Config.sql.queryString");
+                   }
                    retry_count--;
                    try {
                        Thread.currentThread().sleep(1000);
