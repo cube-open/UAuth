@@ -90,7 +90,6 @@ public class webServer {
            try {
                System.out.println("Trying to connect mysql server at "+url+" ......");
                 System.out.println("User: "+user);
-                System.out.println("Password: "+password);
                //连接mariadb/mysql
                connection =  DriverManager.getConnection(url, user, password);
                System.out.println("Mysql connector loaded at: " + connection);
