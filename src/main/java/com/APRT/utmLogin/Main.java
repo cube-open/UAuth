@@ -9,22 +9,23 @@ import org.apache.maven.surefire.shared.io.output.TeeOutputStream;
 import java.io.*;
 import java.util.*;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 
 
 
 public class Main {
-
     public static boolean Status = true;
     private static String LightSK_Key;
     private static Boolean LightSK = false;
-    String Cmd;
-    String sourceFilePath = "src/main/resources/config.yml";
     static String destinationFolderPath = "config/";
     static Scanner in = new Scanner(System.in);
     private static final Logger logger = Logger.getLogger(Main.class.getName());
     private static HashMap<String,Boolean> hashMap = new HashMap<>();
+    static ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
     public static void main(String[] args) {
         String logFileName = "latest.log";
         Scanner scanner = new Scanner(System.in);
@@ -34,7 +35,9 @@ public class Main {
                 System.out.println("Closing scanner......");
                 scanner.close();
                 System.out.println("Scanner was closed");
+
             }
+
 
         }));
         try {
@@ -53,6 +56,9 @@ public class Main {
 
 
         System.out.println("UTM-Login now loading......");
+        WatchDog.WatchDog();
+        // 每500ms执行一次握手
+        executor.scheduleAtFixedRate(WatchDog::handshake, 0, 500, TimeUnit.MILLISECONDS);
         // 打印操作系统信息
         String osName = System.getProperty("os.name");
         String osVersion = System.getProperty("os.version");
@@ -73,6 +79,7 @@ public class Main {
         System.out.println("Min Memory: " + minMemoryStr);
         Dir.mkdir(".","log");
         String Cmd;
+
         try {
             // 读取资源文件
             InputStream inputStream = Main.class.getClassLoader().getResourceAsStream("config.yml");
@@ -150,6 +157,7 @@ public class Main {
 
 
         while(true){
+
             if(Status==false) break;
             System.out.print(">");
             Cmd = in.nextLine();
@@ -278,7 +286,6 @@ public class Main {
             exception.printStackTrace();
             throw exception;
         }
-
 
     }
 }
