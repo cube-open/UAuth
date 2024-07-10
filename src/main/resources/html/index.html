@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>UTM-LOGIN-Authorization</title>
+    <style>
+    body {
+    background-color: #FFFFFF;
+    font-family: Roboto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    }
+
+    .login {
+    background-color: #0b132b;
+    width: 400px;
+    color: #f8f9fa;
+    padding: 40px;
+    box-shadow: 10px 10px 25px #000000;
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    }
+
+    .login input {
+    display: block;
+    margin: 20px auto;
+    text-align: center;
+    background: none;
+    padding: 12px;
+    font-size: 15px;
+    border-radius: 22px;
+    outline: none;
+    color: #f8f9fa;
+    }
+
+    .login input[type="text"],
+    .login input[type="password"] {
+    border: 2px solid #3498db;
+    width: 220px;
+    }
+
+    .login input[type="submit"] {
+    width: 150px;
+    border: 2px solid #2ecc71;
+    cursor: pointer;
+    }
+
+    .login input[type="text"]:focus,
+    .login input[type="password"]:focus {
+    border-color: #2ecc71;
+    width: 250px;
+    transition: 0.5s;
+    }
+
+    .login input[type="submit"]:hover {
+    background-color: #2ecc71;
+    transition: 0.5s;
+    }
+
+    .status {
+    color: #2ecc71;
+    font-size: 18px;
+    margin-top: 20px;
+    }
+    </style>
+</head>
+
+<body>
+<h1>Authorization</h1>
+<div class="login">
+    <form id="loginForm">
+        <input type="text" id="username" placeholder="Username" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <input type="submit" value="Login">
+    </form>
+    <div class="status" id="statusMessage"></div>
+    <a href="/reg">Register</a>
+</div>
+
+<script src="login.js"></script>
+</body>
+
+</html>

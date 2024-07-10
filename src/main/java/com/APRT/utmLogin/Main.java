@@ -7,11 +7,16 @@ package com.APRT.utmLogin;
 import org.apache.maven.surefire.shared.io.output.TeeOutputStream;
 
 import java.io.*;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.nio.file.Files;
 import java.util.*;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.logging.Logger;
 
 
@@ -85,20 +90,19 @@ public class Main {
             // 读取资源文件
             Dir.mkdir(".","html");
             InputStream inputStream = Main.class.getClassLoader().getResourceAsStream("config.yml");
-            InputStream inputStreamHtml = Main.class.getClassLoader().getResourceAsStream("index.html");
+            InputStream inputStreamHtml = Main.class.getClassLoader().getResourceAsStream("html/index.html");
             if (inputStream == null) {
                 System.out.println("Can not find config!");
                 LLogger.LogRec("Can not find config!");
                 return;
             }
             File destinationFolder = new File(destinationFolderPath);
-            OutputStream outputHtml = new FileOutputStream("html/"+"index.html");
-            byte[] buff = new byte[1024];
-            int lengths;
-            while ((lengths = inputStreamHtml.read(buff)) > 0) {
-                outputHtml.write(buff, 0, lengths);
+            File html = new File("html");
+            if (!html.exists()){
+                extractResourcesFromJar("html", new File("html"));
+
             }
-            outputHtml.close();
+
             if (!destinationFolder.exists()) {
                 destinationFolder.mkdirs();
                 OutputStream outputStream = new FileOutputStream(destinationFolderPath + "config.yml");
@@ -299,6 +303,61 @@ public class Main {
             throw exception;
         }
 
+    }
+    private static void extractResourcesFromJar(String resourcePath, File targetDir) throws IOException {
+        Enumeration<URL> resources = Main.class.getClassLoader().getResources(resourcePath);
+        while (resources.hasMoreElements()) {
+            URL resourceUrl = resources.nextElement();
+            if ("jar".equals(resourceUrl.getProtocol())) {
+                String jarPath = resourceUrl.getPath();
+                // 解析出JAR文件的路径和内部资源路径
+                String jarFilePart = jarPath.substring(5, jarPath.indexOf("!")); // strip out the jar:file:/ part and the !/
+                JarFile jarFile = new JarFile(URLDecoder.decode(jarFilePart, "UTF-8"));
+                String jarResourcePath = jarPath.substring(jarPath.indexOf("!/") + 2);
+
+                // 获取JAR文件中的枚举条目
+                Enumeration<JarEntry> entries = jarFile.entries();
+                while (entries.hasMoreElements()) {
+                    JarEntry entry = entries.nextElement();
+                    String name = entry.getName();
+                    if (name.startsWith(jarResourcePath)) {
+                        InputStream in = jarFile.getInputStream(entry);
+                        File file = new File(targetDir, name.substring(jarResourcePath.length()));
+                        if (!file.getParentFile().exists()) {
+                            file.getParentFile().mkdirs();
+                        }
+                        if (!entry.isDirectory()) {
+                            OutputStream out = new FileOutputStream(file);
+                            byte[] buffer = new byte[1024];
+                            int length;
+                            while ((length = in.read(buffer)) > 0) {
+                                out.write(buffer, 0, length);
+                            }
+                            out.close();
+                        }
+                        in.close();
+                    }
+                }
+                jarFile.close();
+            } else if ("file".equals(resourceUrl.getProtocol())) {
+                // 如果资源不是在JAR中，而是直接在类路径上
+                File file = new File(resourceUrl.getFile());
+                copyDirectory(file, targetDir);
+            }
+        }
+    }
+
+    private static void copyDirectory(File source, File target) throws IOException {
+        if (source.isDirectory()) {
+            if (!target.exists() && !target.mkdirs()) {
+                throw new IOException("Failed to create directory " + target.getAbsolutePath());
+            }
+            for (String child : source.list()) {
+                copyDirectory(new File(source, child), new File(target, child));
+            }
+        } else {
+            Files.copy(source.toPath(), target.toPath());
+        }
     }
 }
 
