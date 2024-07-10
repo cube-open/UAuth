@@ -13,6 +13,7 @@ import java.net.InetSocketAddress;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
@@ -62,12 +63,33 @@ public abstract class webServer implements HttpHandler {
                        outputStream.write(responseJson.getBytes());
                        outputStream.close();
                    } else if ("GET".equals(exchange.getRequestMethod())) {
-                       Path indexHtmlPath = Paths.get("html/index.html");
-                       if (Files.exists(indexHtmlPath)) {
-                           serveFile(exchange, indexHtmlPath);
-                       } else if (Files.exists(indexHtmlPath)) {
-                           serveFile(exchange, indexHtmlPath);
+                       String requestedPath = exchange.getRequestURI().getPath();
+
+                       // 去除开头的"/"
+                       if (requestedPath.startsWith("/")) {
+                           requestedPath = requestedPath.substring(1);
+                       }
+
+                       Path filePath = Paths.get("html", requestedPath);
+
+                       // 检查文件或目录是否存在
+                       if (Files.exists(filePath)) {
+                           if (Files.isDirectory(filePath)) {
+                               // 如果是目录，尝试找到index.html
+                               Path indexPath = filePath.resolve("index.html");
+                               if (Files.exists(indexPath)) {
+                                   serveFile(exchange, indexPath);
+                               } else {
+                                   // 如果没有index.html，你可以选择返回一个目录列表或其他默认页面
+                                   // 这里我们简单地返回404
+                                   exchange.sendResponseHeaders(404, 0);
+                               }
+                           } else {
+                               // 如果是文件，直接返回文件内容
+                               serveFile(exchange, filePath);
+                           }
                        } else {
+                           // 如果路径不存在，返回404
                            exchange.sendResponseHeaders(404, 0);
                        }
                    } else {
@@ -105,12 +127,24 @@ public abstract class webServer implements HttpHandler {
    }
 
     private static void serveFile(HttpExchange exchange, Path filePath) throws IOException {
-        byte[] content = Files.readAllBytes(filePath);
-        exchange.getResponseHeaders().set("Content-Type", getContentType(filePath));
-        exchange.sendResponseHeaders(200, content.length);
-        OutputStream os = exchange.getResponseBody();
-        os.write(content);
-        os.close();
+        if (!Files.exists(filePath)) {
+            // 文件或目录不存在，发送404.html
+            Path notFoundPage = Paths.get("html", "404.html");
+            if (Files.exists(notFoundPage)) {
+                serveFile(exchange, notFoundPage);
+            } else {
+                // 如果404.html也不存在，发送空的404响应
+                exchange.sendResponseHeaders(404, 0);
+            }
+        } else {
+            // 文件存在，正常发送响应
+            byte[] content = Files.readAllBytes(filePath);
+            exchange.getResponseHeaders().set("Content-Type", getContentType(filePath));
+            exchange.sendResponseHeaders(200, content.length);
+            try (OutputStream os = exchange.getResponseBody()) {
+                os.write(content);
+            }
+        }
     }
     private static String getContentType(Path path) {
         String fileName = path.getFileName().toString();
