@@ -81,14 +81,24 @@ public class Main {
         String Cmd;
 
         try {
+
             // 读取资源文件
+            Dir.mkdir(".","html");
             InputStream inputStream = Main.class.getClassLoader().getResourceAsStream("config.yml");
+            InputStream inputStreamHtml = Main.class.getClassLoader().getResourceAsStream("index.html");
             if (inputStream == null) {
                 System.out.println("Can not find config!");
                 LLogger.LogRec("Can not find config!");
                 return;
             }
             File destinationFolder = new File(destinationFolderPath);
+            OutputStream outputHtml = new FileOutputStream("html/"+"index.html");
+            byte[] buff = new byte[1024];
+            int lengths;
+            while ((lengths = inputStreamHtml.read(buff)) > 0) {
+                outputHtml.write(buff, 0, lengths);
+            }
+            outputHtml.close();
             if (!destinationFolder.exists()) {
                 destinationFolder.mkdirs();
                 OutputStream outputStream = new FileOutputStream(destinationFolderPath + "config.yml");
