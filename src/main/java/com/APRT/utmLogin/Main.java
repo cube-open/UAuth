@@ -124,6 +124,7 @@ public class Main {
         RegCommand("Version");
         RegCommand("version");
         RegCommand("help");
+        RegCommand("?");
         System.out.println("Auto backup="+ ReadYaml.readYamlBoolean("./config/config.yml","Config.autoBackup.Enable"));
         LightSK = ReadYaml.readYamlBoolean("./config/config.yml", "Config.key.enable");
         if (LightSK){
@@ -264,6 +265,7 @@ public class Main {
             }
             if(CmdStatus==true){
                 System.out.println("Wrong command: " + Cmd);
+                System.out.println("Please type ? or help to get  help.");
                 CmdStatus = false;
             }
         }

@@ -1,5 +1,7 @@
 package com.APRT.utmLogin;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
@@ -64,9 +66,16 @@ public class webServer implements HttpHandler {
         if ("POST".equals(exchange.getRequestMethod())) {
             // 处理POST请求的逻辑
             InputStream requestBody = exchange.getRequestBody();
-            // 处理接收到的JSON数据
-            String requestJson = new String(requestBody.readAllBytes());
-            System.out.println("Received JSON: " + requestJson);
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode jsonNode = mapper.readTree(requestBody);
+
+            boolean hasUser = jsonNode.has("user");
+            boolean hasPasswd = jsonNode.has("passwd");
+            boolean hasStatus = jsonNode.has("status");
+            System.out.println("Get post!");
+            System.out.println("Has 'user': " + hasUser);
+            System.out.println("Has 'passwd': " + hasPasswd);
+            System.out.println("Has 'status': " + hasStatus);
 
             // 构建JSON响应数据
             String responseJson = "{\"message\": \"Received your request\"}";
@@ -76,15 +85,19 @@ public class webServer implements HttpHandler {
             outputStream.write(responseJson.getBytes());
             outputStream.close();
         } else if ("GET".equals(exchange.getRequestMethod())) {
-            // 处理GET请求的逻辑
-            String redirectUrl = "about:blank"; // 重定向URL
-            exchange.getResponseHeaders().set("Location", redirectUrl);
-            exchange.sendResponseHeaders(301, -1); // 发送301重定向响应码
-            exchange.close();
+            // 处理GET请求，执行301重定向
+            performRedirect(exchange);
         } else {
             // 如果不是POST或GET请求，返回403错误
             exchange.sendResponseHeaders(403, 0);
         }
+    }
+
+    private void performRedirect(HttpExchange exchange) throws IOException {
+        String redirectUrl = "about:blank#block";
+        exchange.getResponseHeaders().set("Location", redirectUrl);
+        exchange.sendResponseHeaders(301, -1); // 发送301重定向响应码
+        exchange.close();
     }
     }
 
