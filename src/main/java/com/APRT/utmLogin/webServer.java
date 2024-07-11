@@ -66,12 +66,23 @@ public abstract class webServer implements HttpHandler {
                    } else if ("GET".equals(exchange.getRequestMethod())) {
                        String requestedPath = exchange.getRequestURI().getPath();
 
+                       // 输出请求的路径
+                       System.out.println("GET request for path: " + requestedPath);
+                       LLogger.LogRec("GET request for path: " + requestedPath);
+
+                       // 获取客户端的IP地址
+                       String clientIp = exchange.getRemoteAddress().getAddress().getHostAddress();
+                       System.out.println("Request from IP: " + clientIp);
+                       LLogger.LogRec("Request from IP: " + clientIp);
+
                        // 去除开头的"/"
                        if (requestedPath.startsWith("/")) {
                            requestedPath = requestedPath.substring(1);
                        }
 
-                       Path filePath = Paths.get("html", requestedPath);
+                       Path filePath = Paths.get("html/", requestedPath);
+                       System.out.println("Trying to access file at: " + filePath);
+                       LLogger.LogRec("Trying to access file at: " + filePath);
 
                        // 检查文件或目录是否存在
                        if (Files.exists(filePath)) {
@@ -79,25 +90,29 @@ public abstract class webServer implements HttpHandler {
                                // 如果是目录，尝试找到index.html
                                Path indexPath = filePath.resolve("index.html");
                                if (Files.exists(indexPath)) {
+                                   System.out.println("Found index.html, serving...");
                                    serveFile(exchange, indexPath);
                                } else {
-                                   // 如果没有index.html，你可以选择返回一个目录列表或其他默认页面
-                                   // 这里我们简单地返回404
-                                   exchange.sendResponseHeaders(404, 0);
+                                   System.out.println("No index.html found, sending 404.");
+                                   send404(exchange);
                                }
                            } else {
                                // 如果是文件，直接返回文件内容
+                               System.out.println("Serving...");
+                               LLogger.LogRec("Serving......");
                                serveFile(exchange, filePath);
                            }
                        } else {
-                           // 如果路径不存在，返回404
-                           exchange.sendResponseHeaders(404, 0);
+                           System.out.println("File not found, sending 404.");
+                           LLogger.LogRec("File not found, sending 404.");
+                           send404(exchange);
                        }
                    } else {
                        // 如果不是POST或GET请求，返回403错误
                        exchange.sendResponseHeaders(403, 0);
                    }
                }
+
            });
            server.start();
            System.out.println("Started web server!");
@@ -128,19 +143,17 @@ public abstract class webServer implements HttpHandler {
    }
 
     private static void serveFile(HttpExchange exchange, Path filePath) throws IOException {
-        filePath = HTML_ROOT.resolve(filePath).normalize();
 
-        // 防止路径遍历攻击
-        if (!filePath.startsWith(HTML_ROOT)) {
-            send404(exchange);
-            return;
-        }
 
+        System.out.println("ServeServer is trying to find file: "+filePath);
+        LLogger.LogRec("ServeServer is trying to find file: "+filePath);
         if (Files.isDirectory(filePath)) {
             Path indexPath = filePath.resolve("index.html");
             if (Files.exists(indexPath)) {
                 serveFile(exchange, indexPath);
             } else {
+                System.out.println("No index.html found, sending 404.");
+                LLogger.LogRec("No index.html found, sending 404.");
                 send404(exchange);
             }
         } else if (Files.exists(filePath)) {
@@ -152,9 +165,12 @@ public abstract class webServer implements HttpHandler {
                 os.write(content);
             }
         } else {
+            System.out.println("File not found, sending 404.");
+            LLogger.LogRec("File not found, sending 404.");
             send404(exchange);
         }
     }
+
 
     private static void send404(HttpExchange exchange) throws IOException {
         Path notFoundPage = HTML_ROOT.resolve("404.html");
