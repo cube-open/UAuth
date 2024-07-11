@@ -9,6 +9,7 @@ import org.apache.maven.surefire.shared.io.output.TeeOutputStream;
 import java.io.*;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -97,10 +98,10 @@ public class Main {
                 return;
             }
             File destinationFolder = new File(destinationFolderPath);
-            /*InputStream inputStreamHtml = Main.class.getClassLoader().getResourceAsStream("html/index.html");
+            /*InputStream inputStreamHtml = Main.class.getClassLoader().getResourceAsStream("html/reg.html");
             File html = new File("html");
             if (!html.exists()){
-                OutputStream outputHtml = new FileOutputStream("html/"+ "index.html");
+                OutputStream outputHtml = new FileOutputStream("html/"+ "reg.html");
                 byte[] buff = new byte[1024];
                 int lengths;
                 while ((lengths = inputStreamHtml.read(buff)) > 0) {
@@ -215,6 +216,7 @@ public class Main {
 
                         return;
                     }
+                    extractResources("html", "html");
                     File destinationFolder = new File(destinationFolderPath);
                     if (!destinationFolder.exists()) {
                         destinationFolder.mkdirs();
@@ -317,26 +319,42 @@ public class Main {
         ClassLoader classLoader = Main.class.getClassLoader();
         URL resourceUrl = classLoader.getResource(resourcePath);
 
+        if (resourceUrl == null) {
+            throw new FileNotFoundException("Resource not found: " + resourcePath);
+        }
+
         // 如果资源是一个目录
-        if (resourceUrl.getProtocol().equals("file")) {
+        if ("file".equals(resourceUrl.getProtocol())) {
             copyDirectory(new File(resourceUrl.getPath()), new File(targetDir));
-        } else if (resourceUrl.getProtocol().equals("jar")) { // 如果资源在JAR中
+        } else if ("jar".equals(resourceUrl.getProtocol())) { // 如果资源在JAR中
             String jarPath = resourceUrl.getPath().substring(5, resourceUrl.getPath().indexOf("!")); // 提取JAR文件路径
-            ZipFile jarFile = new ZipFile(URLDecoder.decode(jarPath, "UTF-8"));
-            Enumeration<ZipEntry> entries = (Enumeration<ZipEntry>) jarFile.entries();
+            ZipFile jarFile = new ZipFile(URLDecoder.decode(jarPath, StandardCharsets.UTF_8));
+            Enumeration<? extends ZipEntry> entries = jarFile.entries();
             while (entries.hasMoreElements()) {
                 ZipEntry entry = entries.nextElement();
                 String entryName = entry.getName();
-                if (entryName.startsWith(resourcePath) && !entry.isDirectory()) {
-                    InputStream in = jarFile.getInputStream(entry);
-                    Path path = Paths.get(targetDir, entryName.substring(resourcePath.length() + 1));
-                    Files.copy(in, path);
-                    in.close();
+                if (entryName.startsWith(resourcePath)) {
+                    Path pathInJar = Paths.get(entryName);
+                    Path basePath = Paths.get(resourcePath);
+                    Path subPath = basePath.relativize(pathInJar);
+                    Path pathOnDisk = Paths.get(targetDir).resolve(subPath); // 使用 resolve 方法
+
+
+                    if (!entry.isDirectory()) {
+                        Files.createDirectories(pathOnDisk.getParent()); // 确保父目录存在
+                        try (InputStream in = jarFile.getInputStream(entry);
+                             OutputStream out = Files.newOutputStream(pathOnDisk)) {
+                            in.transferTo(out);
+                        }
+                    } else {
+                        Files.createDirectories(pathOnDisk); // 创建目录
+                    }
                 }
             }
             jarFile.close();
         }
     }
+
 
     private static void copyDirectory(File sourceDir, File targetDir) throws IOException {
         if (!targetDir.exists()) {

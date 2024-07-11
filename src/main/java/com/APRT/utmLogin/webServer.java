@@ -19,8 +19,9 @@ import java.util.logging.Logger;
 
 public abstract class webServer implements HttpHandler {
     //http通讯，等待开发中。
+    private static final Path HTML_ROOT = Paths.get("html/");
 
-   public static HttpServer server = null;
+    public static HttpServer server = null;
     private static int port = (int) ReadYaml.readYamlValue("config/config.yml","Config.web.port");
    public static void webStart(){
 
@@ -127,34 +128,67 @@ public abstract class webServer implements HttpHandler {
    }
 
     private static void serveFile(HttpExchange exchange, Path filePath) throws IOException {
-        if (!Files.exists(filePath)) {
-            // 文件或目录不存在，发送404.html
-            Path notFoundPage = Paths.get("html", "404.html");
-            if (Files.exists(notFoundPage)) {
-                serveFile(exchange, notFoundPage);
+        filePath = HTML_ROOT.resolve(filePath).normalize();
+
+        // 防止路径遍历攻击
+        if (!filePath.startsWith(HTML_ROOT)) {
+            send404(exchange);
+            return;
+        }
+
+        if (Files.isDirectory(filePath)) {
+            Path indexPath = filePath.resolve("index.html");
+            if (Files.exists(indexPath)) {
+                serveFile(exchange, indexPath);
             } else {
-                // 如果404.html也不存在，发送空的404响应
-                exchange.sendResponseHeaders(404, 0);
+                send404(exchange);
             }
-        } else {
-            // 文件存在，正常发送响应
+        } else if (Files.exists(filePath)) {
             byte[] content = Files.readAllBytes(filePath);
             exchange.getResponseHeaders().set("Content-Type", getContentType(filePath));
             exchange.sendResponseHeaders(200, content.length);
+
             try (OutputStream os = exchange.getResponseBody()) {
                 os.write(content);
             }
+        } else {
+            send404(exchange);
+        }
+    }
+
+    private static void send404(HttpExchange exchange) throws IOException {
+        Path notFoundPage = HTML_ROOT.resolve("404.html");
+        if (Files.exists(notFoundPage)) {
+            byte[] content = Files.readAllBytes(notFoundPage);
+            exchange.getResponseHeaders().set("Content-Type", "text/html");
+            exchange.sendResponseHeaders(404, content.length);
+
+            try (OutputStream os = exchange.getResponseBody()) {
+                os.write(content);
+            }
+        } else {
+            exchange.sendResponseHeaders(404, 0);
         }
     }
     private static String getContentType(Path path) {
         String fileName = path.getFileName().toString();
         if (fileName.endsWith(".html") || fileName.endsWith(".htm")) {
             return "text/html";
-        } else if (fileName.endsWith(".php")) {
-            return "application/x-httpd-php";
+        } else if (fileName.endsWith(".css")) {
+            return "text/css";
+        } else if (fileName.endsWith(".js")) {
+            return "application/javascript";
+        } else if (fileName.endsWith(".png")) {
+            return "image/png";
+        } else if (fileName.endsWith(".jpg") || fileName.endsWith(".jpeg")) {
+            return "image/jpeg";
+        } else if (fileName.endsWith(".gif")) {
+            return "image/gif";
+        } else if (fileName.endsWith(".svg")) {
+            return "image/svg+xml";
         }
-        // Add more content types as needed
-        return "application/octet-stream"; // Default content type
+        // 添加更多内容类型...
+        return "application/octet-stream"; // 默认内容类型
     }
 
 }
