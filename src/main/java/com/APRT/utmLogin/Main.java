@@ -185,114 +185,117 @@ public class Main {
 
             if(Status==false) break;
             System.out.print(">");
-            Cmd = in.nextLine();
-            System.out.println();
-            if(Objects.equals(Cmd, "exit")){
-                System.out.println("Bye");
-                System.exit(0);
-            }
-            if(Objects.equals(Cmd, "Ver") || Cmd.equals("Version") || Cmd.equals("version")){
-                System.out.println("""
+            if(in.hasNextLine()){
+                Cmd = in.nextLine();
+                System.out.println();
+                if(Objects.equals(Cmd, "exit")){
+                    System.out.println("Bye");
+                    System.exit(0);
+                }
+                if(Objects.equals(Cmd, "Ver") || Cmd.equals("Version") || Cmd.equals("version")){
+                    System.out.println("""
                         UTM-Login 1.0 SnapShot
                         By QiLingYuJie-John
                         Welcome!
                         """);
-            }
-            if(Objects.equals(Cmd, "help")||Objects.equals(Cmd, "?")) {
-                System.out.println("""
+                }
+                if(Objects.equals(Cmd, "help")||Objects.equals(Cmd, "?")) {
+                    System.out.println("""
                         Help menu
                         "exit" stop server
                         "reload" reload server and test mysql again
                         "Ver","Version","version" show server version
                         """);
-            }
-            if(Objects.equals(Cmd, "reload")) {
-                try {
-                    // 读取资源文件
-                    InputStream inputStream = Main.class.getClassLoader().getResourceAsStream("config.yml");
-                    if (inputStream == null) {
-                        System.out.println("Can not find config!");
-                        LLogger.LogRec("Can not find config!");
+                }
+                if(Objects.equals(Cmd, "reload")) {
+                    try {
+                        // 读取资源文件
+                        InputStream inputStream = Main.class.getClassLoader().getResourceAsStream("config.yml");
+                        if (inputStream == null) {
+                            System.out.println("Can not find config!");
+                            LLogger.LogRec("Can not find config!");
 
-                        return;
-                    }
-                    extractResources("html", "html");
-                    File destinationFolder = new File(destinationFolderPath);
-                    if (!destinationFolder.exists()) {
-                        destinationFolder.mkdirs();
-                        OutputStream outputStream = new FileOutputStream(destinationFolderPath + "config.yml");
-                        byte[] buffer = new byte[1024];
-                        int length;
-                        while ((length = inputStream.read(buffer)) > 0) {
-                            outputStream.write(buffer, 0, length);
+                            return;
                         }
+                        extractResources("html", "html");
+                        File destinationFolder = new File(destinationFolderPath);
+                        if (!destinationFolder.exists()) {
+                            destinationFolder.mkdirs();
+                            OutputStream outputStream = new FileOutputStream(destinationFolderPath + "config.yml");
+                            byte[] buffer = new byte[1024];
+                            int length;
+                            while ((length = inputStream.read(buffer)) > 0) {
+                                outputStream.write(buffer, 0, length);
+                            }
 
-                        // 关闭流
-                        inputStream.close();
-                        outputStream.close();
+                            // 关闭流
+                            inputStream.close();
+                            outputStream.close();
 
-                        System.out.println("Created config");
-                        LLogger.LogRec("Created config");
+                            System.out.println("Created config");
+                            LLogger.LogRec("Created config");
+                            // 创建目标文件夹
+                        }
                         // 创建目标文件夹
+
+                    } catch (IOException e) {
+                        logger.warning("Error while creating config!!!");
+                        LLogger.LogRec("Error while creating config!!!");
+                        LLogger.LogRec(Arrays.toString(e.getStackTrace()));
+                        System.out.println("Cause by: " + e.getCause()+ " " + e.getMessage());
+
                     }
-                    // 创建目标文件夹
 
-                } catch (IOException e) {
-                    logger.warning("Error while creating config!!!");
-                    LLogger.LogRec("Error while creating config!!!");
-                    LLogger.LogRec(Arrays.toString(e.getStackTrace()));
-                    System.out.println("Cause by: " + e.getCause()+ " " + e.getMessage());
-
-                }
-
-                if (ReadYaml.readYamlBoolean("./config/config.yml", "Config.key.enable")){
-                    if(LightSK!=ReadYaml.readYamlBoolean("./config/config.yml", "Config.key.enable")){
-                        LightSK=ReadYaml.readYamlBoolean("./config/config.yml", "Config.key.enable");
-                    }
-                    if (ReadYaml.readYamlString("./config/config.yml","Config.key.key")==null){
-                        logger.warning("Key is null!Will not start server(key can't be like '123')!Server can't running!");
-                        System.out.println("Please input LightSK key in config,then reload again!");
-                        LLogger.LogRec("Key is null!");
-                        LightSK=false;
-                        try {
-                            Thread.currentThread().sleep(500);
-                        } catch (InterruptedException e) {
-                            throw new RuntimeException(e);
+                    if (ReadYaml.readYamlBoolean("./config/config.yml", "Config.key.enable")){
+                        if(LightSK!=ReadYaml.readYamlBoolean("./config/config.yml", "Config.key.enable")){
+                            LightSK=ReadYaml.readYamlBoolean("./config/config.yml", "Config.key.enable");
                         }
+                        if (ReadYaml.readYamlString("./config/config.yml","Config.key.key")==null){
+                            logger.warning("Key is null!Will not start server(key can't be like '123')!Server can't running!");
+                            System.out.println("Please input LightSK key in config,then reload again!");
+                            LLogger.LogRec("Key is null!");
+                            LightSK=false;
+                            try {
+                                Thread.currentThread().sleep(500);
+                            } catch (InterruptedException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+                        LightSK_Key=ReadYaml.readYamlString("./config/config.yml","Config.key.key");
+
                     }
-                    LightSK_Key=ReadYaml.readYamlString("./config/config.yml","Config.key.key");
+                    else{
+                        logger.warning("Error!LightSK is not enable!Server will not run.");
+                        System.exit(-1);
+                    }
+                    System.out.println("Try to connect mysql server......");
+                    sqlServer.con();
+                    System.out.println("Restart web server......");
+                    webServer.server.stop(0);
+                    webServer.webStart();
+                    LLogger.LogRec("Reloaded the server.");
+                    System.out.println("Complete!");
 
                 }
-                else{
-                    logger.warning("Error!LightSK is not enable!Server will not run.");
-                    System.exit(-1);
-                }
-                System.out.println("Try to connect mysql server......");
-                sqlServer.con();
-                System.out.println("Restart web server......");
-                webServer.server.stop(0);
-                webServer.webStart();
-                LLogger.LogRec("Reloaded the server.");
-                System.out.println("Complete!");
+                for (String key : hashMap.keySet()) {
+                    if (Cmd!=null&&!key.equals(Cmd)) {
+                        // 如果不包含特定字符串
+                        CmdStatus = true;
 
+                    }
+                    else {
+                        CmdStatus=false;
+                        break;
+                    }
+
+                }
+                if(CmdStatus==true){
+                    System.out.println("Wrong command: " + Cmd);
+                    System.out.println("Please type ? or help to get  help.");
+                    CmdStatus = false;
+                }
             }
-            for (String key : hashMap.keySet()) {
-                if (Cmd!=null&&!key.equals(Cmd)) {
-                    // 如果不包含特定字符串
-                    CmdStatus = true;
 
-                }
-                else {
-                    CmdStatus=false;
-                    break;
-                }
-
-            }
-            if(CmdStatus==true){
-                System.out.println("Wrong command: " + Cmd);
-                System.out.println("Please type ? or help to get  help.");
-                CmdStatus = false;
-            }
         }
 
         // 其他代码逻辑
