@@ -26,6 +26,7 @@ public class YamlEditor {
             e.printStackTrace();
         }
     }
+
     public static void listAdd(String filePath, String listKey, String value) {
         try {
             Yaml yaml = new Yaml();

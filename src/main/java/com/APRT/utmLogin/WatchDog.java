@@ -14,10 +14,10 @@ public class WatchDog {
             if (System.currentTimeMillis() - startTime > 1000) {
                 // 判断主线程是否超时
                 int behindTime = Math.toIntExact(System.currentTimeMillis() - startTime);
-                if (behindTime >= 20000){
-                    System.out.println("Can't keep up!Is server over load? Running " +behindTime + "ms behind!");
+                if (behindTime >= 20000) {
+                    System.out.println("Can't keep up!Is server over load? Running " + behindTime + "ms behind!");
                     System.out.println("OOPS!Server was running behind over 20000ms");
-                    LLogger.LogRec("Can't keep up!Is server over load? Running " +behindTime + "ms behind!");
+                    LLogger.LogRec("Can't keep up!Is server over load? Running " + behindTime + "ms behind!");
                     LLogger.LogRec("OOPS!Server was running behind over 20000ms");
                     System.out.println(">");
                     System.out.println("Stopping server......");
@@ -25,23 +25,22 @@ public class WatchDog {
                     System.exit(-1);
                     return;
                 }
-                if (behindTime >= 10000){
-                    System.out.println("Can't keep up!Is server over load? Running " +behindTime + "ms behind!");
+                if (behindTime >= 10000) {
+                    System.out.println("Can't keep up!Is server over load? Running " + behindTime + "ms behind!");
                     System.out.println("OOPS!Server was running behind over 10000ms");
-                    LLogger.LogRec("Can't keep up!Is server over load? Running " +behindTime + "ms behind!");
+                    LLogger.LogRec("Can't keep up!Is server over load? Running " + behindTime + "ms behind!");
                     LLogger.LogRec("OOPS!Server was running behind over 10000ms");
                     System.out.println(">");
                     return;
                 }
-               if (behindTime >= 5000)
-               {
-                   System.out.println("Can't keep up!Is server over load? Running " +behindTime + "ms behind!");
-                   System.out.println("OOPS!Server was running behind over 5000ms");
-                   LLogger.LogRec("Can't keep up!Is server over load? Running " +behindTime + "ms behind!");
-                   LLogger.LogRec("OOPS!Server was running behind over 5000ms");
-                   System.out.println(">");
-                   return;
-               }
+                if (behindTime >= 5000) {
+                    System.out.println("Can't keep up!Is server over load? Running " + behindTime + "ms behind!");
+                    System.out.println("OOPS!Server was running behind over 5000ms");
+                    LLogger.LogRec("Can't keep up!Is server over load? Running " + behindTime + "ms behind!");
+                    LLogger.LogRec("OOPS!Server was running behind over 5000ms");
+                    System.out.println(">");
+                    return;
+                }
 
                 try {
                     Thread.sleep(2500);
@@ -62,6 +61,7 @@ public class WatchDog {
             }
         }
     });
+
     public static void WatchDog() {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             System.out.println("Stopping WatchDog......");

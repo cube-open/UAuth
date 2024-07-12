@@ -30,8 +30,9 @@ public class Main {
     static String destinationFolderPath = "config/";
     static Scanner in = new Scanner(System.in);
     private static final Logger logger = Logger.getLogger(Main.class.getName());
-    private static HashMap<String,Boolean> hashMap = new HashMap<>();
+    private static HashMap<String, Boolean> hashMap = new HashMap<>();
     static ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+
     public static void main(String[] args) {
         String logFileName = "latest.log";
         Scanner scanner = new Scanner(System.in);
@@ -83,13 +84,13 @@ public class Main {
         long minMemory = Runtime.getRuntime().totalMemory();
         String minMemoryStr = String.valueOf(minMemory);
         System.out.println("Min Memory: " + minMemoryStr);
-        Dir.mkdir(".","log");
+        Dir.mkdir(".", "log");
         String Cmd;
 
         try {
 
             // 读取资源文件
-            Dir.mkdir(".","html");
+            Dir.mkdir(".", "html");
             InputStream inputStream = Main.class.getClassLoader().getResourceAsStream("config.yml");
 
             if (inputStream == null) {
@@ -138,7 +139,7 @@ public class Main {
             logger.warning("Error while creating config!!!");
             LLogger.LogRec("Error while creating config!!!");
             LLogger.LogRec(Arrays.toString(e.getStackTrace()));
-            System.out.println("Cause by: " + e.getCause()+ " " + e.getMessage());
+            System.out.println("Cause by: " + e.getCause() + " " + e.getMessage());
         }
         System.out.println("Registering command......");
         Boolean CmdStatus = false;
@@ -149,10 +150,10 @@ public class Main {
         RegCommand("version");
         RegCommand("help");
         RegCommand("?");
-        System.out.println("Auto backup="+ ReadYaml.readYamlBoolean("./config/config.yml","Config.autoBackup.Enable"));
+        System.out.println("Auto backup=" + ReadYaml.readYamlBoolean("./config/config.yml", "Config.autoBackup.Enable"));
         LightSK = ReadYaml.readYamlBoolean("./config/config.yml", "Config.key.enable");
-        if (LightSK){
-            if (ReadYaml.readYamlString("./config/config.yml","Config.key.key")==null){
+        if (LightSK) {
+            if (ReadYaml.readYamlString("./config/config.yml", "Config.key.key") == null) {
                 logger.warning("Key is null!Will not start server(key can't be like '123')!");
                 LLogger.LogRec("Key is null,Now stopping server.");
                 try {
@@ -162,15 +163,14 @@ public class Main {
                 }
                 System.exit(-1);
             }
-            LightSK_Key=ReadYaml.readYamlString("./config/config.yml","Config.key.key");
+            LightSK_Key = ReadYaml.readYamlString("./config/config.yml", "Config.key.key");
 
-        }
-        else{
+        } else {
             System.err.println("LightSK is not enable,server wont start.");
             System.exit(0);
         }
         sqlServer.con();
-        if(ReadYaml.readYamlValue("config/config.yml","Config.web.port")==null){
+        if (ReadYaml.readYamlValue("config/config.yml", "Config.web.port") == null) {
             logger.warning("Error!Web server listen port is null!");
             LLogger.LogRec("Web server listen port is null!");
             System.exit(-1);
@@ -180,34 +180,33 @@ public class Main {
         LLogger.LogRec("Server started!");
 
 
+        while (true) {
 
-        while(true){
-
-            if(Status==false) break;
+            if (Status == false) break;
             System.out.print(">");
-            if(in.hasNextLine()){
+            if (in.hasNextLine()) {
                 Cmd = in.nextLine();
                 System.out.println();
-                if(Objects.equals(Cmd, "exit")){
+                if (Objects.equals(Cmd, "exit")) {
                     System.out.println("Bye");
                     System.exit(0);
                 }
-                if(Objects.equals(Cmd, "Ver") || Cmd.equals("Version") || Cmd.equals("version")){
+                if (Objects.equals(Cmd, "Ver") || Cmd.equals("Version") || Cmd.equals("version")) {
                     System.out.println("""
-                        UTM-Login 1.0 SnapShot
-                        By QiLingYuJie-John
-                        Welcome!
-                        """);
+                            UTM-Login 1.0 SnapShot
+                            By QiLingYuJie-John
+                            Welcome!
+                            """);
                 }
-                if(Objects.equals(Cmd, "help")||Objects.equals(Cmd, "?")) {
+                if (Objects.equals(Cmd, "help") || Objects.equals(Cmd, "?")) {
                     System.out.println("""
-                        Help menu
-                        "exit" stop server
-                        "reload" reload server and test mysql again
-                        "Ver","Version","version" show server version
-                        """);
+                            Help menu
+                            "exit" stop server
+                            "reload" reload server and test mysql again
+                            "Ver","Version","version" show server version
+                            """);
                 }
-                if(Objects.equals(Cmd, "reload")) {
+                if (Objects.equals(Cmd, "reload")) {
                     try {
                         // 读取资源文件
                         InputStream inputStream = Main.class.getClassLoader().getResourceAsStream("config.yml");
@@ -242,29 +241,28 @@ public class Main {
                         logger.warning("Error while creating config!!!");
                         LLogger.LogRec("Error while creating config!!!");
                         LLogger.LogRec(Arrays.toString(e.getStackTrace()));
-                        System.out.println("Cause by: " + e.getCause()+ " " + e.getMessage());
+                        System.out.println("Cause by: " + e.getCause() + " " + e.getMessage());
 
                     }
 
-                    if (ReadYaml.readYamlBoolean("./config/config.yml", "Config.key.enable")){
-                        if(LightSK!=ReadYaml.readYamlBoolean("./config/config.yml", "Config.key.enable")){
-                            LightSK=ReadYaml.readYamlBoolean("./config/config.yml", "Config.key.enable");
+                    if (ReadYaml.readYamlBoolean("./config/config.yml", "Config.key.enable")) {
+                        if (LightSK != ReadYaml.readYamlBoolean("./config/config.yml", "Config.key.enable")) {
+                            LightSK = ReadYaml.readYamlBoolean("./config/config.yml", "Config.key.enable");
                         }
-                        if (ReadYaml.readYamlString("./config/config.yml","Config.key.key")==null){
+                        if (ReadYaml.readYamlString("./config/config.yml", "Config.key.key") == null) {
                             logger.warning("Key is null!Will not start server(key can't be like '123')!Server can't running!");
                             System.out.println("Please input LightSK key in config,then reload again!");
                             LLogger.LogRec("Key is null!");
-                            LightSK=false;
+                            LightSK = false;
                             try {
                                 Thread.currentThread().sleep(500);
                             } catch (InterruptedException e) {
                                 throw new RuntimeException(e);
                             }
                         }
-                        LightSK_Key=ReadYaml.readYamlString("./config/config.yml","Config.key.key");
+                        LightSK_Key = ReadYaml.readYamlString("./config/config.yml", "Config.key.key");
 
-                    }
-                    else{
+                    } else {
                         logger.warning("Error!LightSK is not enable!Server will not run.");
                         System.exit(-1);
                     }
@@ -278,18 +276,17 @@ public class Main {
 
                 }
                 for (String key : hashMap.keySet()) {
-                    if (Cmd!=null&&!key.equals(Cmd)) {
+                    if (Cmd != null && !key.equals(Cmd)) {
                         // 如果不包含特定字符串
                         CmdStatus = true;
 
-                    }
-                    else {
-                        CmdStatus=false;
+                    } else {
+                        CmdStatus = false;
                         break;
                     }
 
                 }
-                if(CmdStatus==true){
+                if (CmdStatus == true) {
                     System.out.println("Wrong command: " + Cmd);
                     System.out.println("Please type ? or help to get  help.");
                     CmdStatus = false;
@@ -307,17 +304,18 @@ public class Main {
 
     }
 
-    public static void RegCommand(String string){
+    public static void RegCommand(String string) {
         try {
-            hashMap.put(string,true);
-        }catch (Exception exception){
-            System.out.println("Reg command failed!Because: "+ exception.getMessage());
-            LLogger.LogRec("Reg command failed!Because: "+ exception.getMessage());
+            hashMap.put(string, true);
+        } catch (Exception exception) {
+            System.out.println("Reg command failed!Because: " + exception.getMessage());
+            LLogger.LogRec("Reg command failed!Because: " + exception.getMessage());
             exception.printStackTrace();
             throw exception;
         }
 
     }
+
     private static void extractResources(String resourcePath, String targetDir) throws IOException {
         ClassLoader classLoader = Main.class.getClassLoader();
         URL resourceUrl = classLoader.getResource(resourcePath);
