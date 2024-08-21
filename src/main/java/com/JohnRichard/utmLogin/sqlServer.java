@@ -1,4 +1,4 @@
-package com.APRT.utmLogin;
+package com.JohnRichard.utmLogin;
 
 import java.sql.Connection;
 import java.sql.Driver;

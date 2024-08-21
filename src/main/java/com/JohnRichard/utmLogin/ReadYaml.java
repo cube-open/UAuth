@@ -1,4 +1,4 @@
-package com.APRT.utmLogin;
+package com.JohnRichard.utmLogin;
 
 import org.yaml.snakeyaml.Yaml;
 

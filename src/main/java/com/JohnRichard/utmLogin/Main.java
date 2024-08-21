@@ -2,14 +2,12 @@
 Java实现-启灵域界科技
 JsonDB算法基于aztice的JsonDB
  */
-package com.APRT.utmLogin;
+package com.JohnRichard.utmLogin;
 
 import org.apache.maven.surefire.shared.io.output.TeeOutputStream;
 
 import java.io.*;
 import java.lang.management.ManagementFactory;
-import java.lang.management.ThreadInfo;
-import java.lang.management.ThreadMXBean;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
@@ -42,6 +40,7 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             System.out.println("Stopping server......");
+            Status = false;
             if (scanner != null) {
                 System.out.println("Closing scanner......");
                 scanner.close();
@@ -91,7 +90,7 @@ public class Main {
         String minMemoryStr = String.valueOf(minMemory);
         System.out.println("Min Memory: " + minMemoryStr);
         Dir.mkdir(".", "log");
-        String Cmd;
+        String Cmd = " ";
 
         try {
 
@@ -189,13 +188,16 @@ public class Main {
         LLogger.LogRec("Server started in " + duration + "ms");
         System.out.println("Server started in " + duration + "ms");
 
-        while (true) {
+        while (Status!=false) {
 
-            if (Status == false) break;
+
             System.out.print(">");
+
             if (in.hasNextLine()) {
-                Cmd = in.nextLine();
-                System.out.println();
+                if( in.nextLine().trim() !=""){
+                    Cmd = in.nextLine().trim();
+                }else{continue;}
+
                 if (Objects.equals(Cmd, "exit")) {
                     System.out.println("Bye");
                     System.exit(0);
@@ -285,7 +287,7 @@ public class Main {
 
                 }
                 for (String key : hashMap.keySet()) {
-                    if (Cmd != null && !key.equals(Cmd)) {
+                    if (Cmd != " " && !key.equals(Cmd)) {
                         // 如果不包含特定字符串
                         CmdStatus = true;
 
@@ -295,10 +297,10 @@ public class Main {
                     }
 
                 }
-                if (CmdStatus == true && Cmd=="") {
+                if (CmdStatus == true && Cmd != " ") {
                     System.out.println("Wrong command: " + Cmd);
                     System.out.println("Please type ? or help to get  help.");
-                    CmdStatus = false;
+                    CmdStatus = true;
                 }
             }
 

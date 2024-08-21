@@ -1,4 +1,4 @@
-package com.APRT.utmLogin;
+package com.JohnRichard.utmLogin;
 
 import javax.sql.rowset.spi.SyncFactoryException;
 import java.io.File;

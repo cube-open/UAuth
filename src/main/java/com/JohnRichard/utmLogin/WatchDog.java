@@ -1,9 +1,8 @@
-package com.APRT.utmLogin;
+package com.JohnRichard.utmLogin;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
-import java.util.logging.Logger;
 
 public class WatchDog {
 
