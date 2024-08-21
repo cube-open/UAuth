@@ -1,5 +1,8 @@
 package com.APRT.utmLogin;
 
+import java.lang.management.ManagementFactory;
+import java.lang.management.ThreadInfo;
+import java.lang.management.ThreadMXBean;
 import java.util.logging.Logger;
 
 public class WatchDog {
@@ -19,9 +22,11 @@ public class WatchDog {
                     System.out.println("OOPS!Server was running behind over 20000ms");
                     LLogger.LogRec("Can't keep up!Is server over load? Running " + behindTime + "ms behind!");
                     LLogger.LogRec("OOPS!Server was running behind over 20000ms");
+                    printThreadSnapshot();
                     System.out.println(">");
                     System.out.println("Stopping server......");
                     LLogger.LogRec("Stopping server......");
+                    Main.Status = false;
                     System.exit(-1);
                     return;
                 }
@@ -30,6 +35,7 @@ public class WatchDog {
                     System.out.println("OOPS!Server was running behind over 10000ms");
                     LLogger.LogRec("Can't keep up!Is server over load? Running " + behindTime + "ms behind!");
                     LLogger.LogRec("OOPS!Server was running behind over 10000ms");
+                    printThreadSnapshot();
                     System.out.println(">");
                     return;
                 }
@@ -38,6 +44,7 @@ public class WatchDog {
                     System.out.println("OOPS!Server was running behind over 5000ms");
                     LLogger.LogRec("Can't keep up!Is server over load? Running " + behindTime + "ms behind!");
                     LLogger.LogRec("OOPS!Server was running behind over 5000ms");
+                    printThreadSnapshot();
                     System.out.println(">");
                     return;
                 }
@@ -68,7 +75,7 @@ public class WatchDog {
             watchdogThread.stop();
 
         }));
-
+        long pid = Main.getCurrentProcessId();
         watchdogThread.start();
 
     }
@@ -76,7 +83,15 @@ public class WatchDog {
     public static void handshake() {
         handshaked = true; // 握手操作
     }
+    public static void printThreadSnapshot() {
+        ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
+        ThreadInfo[] threadInfos = threadMXBean.dumpAllThreads(true, true);
 
+        for (ThreadInfo threadInfo : threadInfos) {
+            System.out.println(threadInfo.toString());
+            LLogger.LogRec(threadInfo.toString());
+        }
+    }
     public void stop() {
         running = false; // 停止监控线程
     }

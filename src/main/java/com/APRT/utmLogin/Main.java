@@ -7,6 +7,9 @@ package com.APRT.utmLogin;
 import org.apache.maven.surefire.shared.io.output.TeeOutputStream;
 
 import java.io.*;
+import java.lang.management.ManagementFactory;
+import java.lang.management.ThreadInfo;
+import java.lang.management.ThreadMXBean;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
@@ -34,7 +37,7 @@ public class Main {
     static ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 
     public static void main(String[] args) {
-        
+
         String logFileName = "latest.log";
         Scanner scanner = new Scanner(System.in);
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -64,6 +67,8 @@ public class Main {
 
         long startTime = System.currentTimeMillis();
         System.out.println("UAuth now loading......");
+        long pid = getCurrentProcessId();
+        System.out.println("Running at pid: " + pid);
         WatchDog.WatchDog();
         // 每500ms执行一次握手
         executor.scheduleAtFixedRate(WatchDog::handshake, 0, 500, TimeUnit.MILLISECONDS);
@@ -319,6 +324,18 @@ public class Main {
         }
 
     }
+    public static long getCurrentProcessId() {
+        // 对于Java 9及以上版本
+        if (System.getProperty("java.version").startsWith("1.")) {
+            // Java 8及以下版本
+            String name = ManagementFactory.getRuntimeMXBean().getName();
+            return Long.parseLong(name.split("@")[0]);
+        } else {
+            // Java 9及以上版本
+            return ProcessHandle.current().pid();
+        }
+    }
+
 
     private static void extractResources(String resourcePath, String targetDir) throws IOException {
         ClassLoader classLoader = Main.class.getClassLoader();
