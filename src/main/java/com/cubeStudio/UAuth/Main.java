@@ -33,6 +33,7 @@ public class Main {
     private static final Logger logger = Logger.getLogger(Main.class.getName());
     private static HashMap<String, Boolean> hashMap = new HashMap<>();
     static ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+    private static String Cmd = " ";
     static Boolean watchDog = ReadYaml.readYamlBoolean("config/config.yml","Config.watchDog");
     public static void main(String[] args) {
 
@@ -92,7 +93,7 @@ public class Main {
         String minMemoryStr = String.valueOf(minMemory);
         System.out.println("Min Memory: " + minMemoryStr);
         Dir.mkdir(".", "log");
-        String Cmd = " ";
+
 
         try {
 
@@ -196,8 +197,9 @@ public class Main {
             System.out.print(">");
 
             if (in.hasNextLine()) {
-                if( in.nextLine().trim() !=""){
-                    Cmd = in.nextLine().trim();
+                String cmd = in.nextLine().trim();
+                if( cmd !=""){
+                    Cmd = cmd;
                 }else{continue;}
 
                 if (Objects.equals(Cmd, "exit")) {
@@ -267,8 +269,9 @@ public class Main {
                             System.out.println("Please input LightSK key in config,then reload again!");
                             LLogger.LogRec("Key is null!");
                             LightSK = false;
+
                             try {
-                                Thread.currentThread().sleep(500);
+                                Thread.sleep(500);
                             } catch (InterruptedException e) {
                                 throw new RuntimeException(e);
                             }
