@@ -34,6 +34,7 @@ public class Main {
     static ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 
     public static void main(String[] args) {
+        
         String logFileName = "latest.log";
         Scanner scanner = new Scanner(System.in);
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -61,8 +62,8 @@ public class Main {
 
         // 输出一些日志信息和控制台输出
 
-
-        System.out.println("UTM-Login now loading......");
+        long startTime = System.currentTimeMillis();
+        System.out.println("UAuth now loading......");
         WatchDog.WatchDog();
         // 每500ms执行一次握手
         executor.scheduleAtFixedRate(WatchDog::handshake, 0, 500, TimeUnit.MILLISECONDS);
@@ -178,7 +179,10 @@ public class Main {
 
         webServer.webStart();
         LLogger.LogRec("Server started!");
-
+        long endTime = System.currentTimeMillis();
+        long duration = endTime - startTime;
+        LLogger.LogRec("Server started in " + duration + "ms");
+        System.out.println("Server started in " + duration + "ms");
 
         while (true) {
 
@@ -193,8 +197,8 @@ public class Main {
                 }
                 if (Objects.equals(Cmd, "Ver") || Cmd.equals("Version") || Cmd.equals("version")) {
                     System.out.println("""
-                            UTM-Login 1.0 SnapShot
-                            By QiLingYuJie-John
+                            UAuth 1.0 SnapShot
+                            By John
                             Welcome!
                             """);
                 }
