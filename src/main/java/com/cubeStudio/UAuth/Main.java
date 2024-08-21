@@ -210,16 +210,14 @@ public class Main {
                     System.out.println("""
                             UAuth 1.0 SnapShot
                             Cube studio
-                            Welcome!
-                            """);
+                            Welcome!""");
                 }
                 if (Objects.equals(Cmd, "help") || Objects.equals(Cmd, "?")) {
                     System.out.println("""
                             Help menu
                             "exit" stop server
                             "reload" reload server and test mysql again
-                            "Ver","Version","version" show server version
-                            """);
+                            "Ver","Version","version" show server version""");
                 }
                 if (Objects.equals(Cmd, "reload")) {
                     try {
