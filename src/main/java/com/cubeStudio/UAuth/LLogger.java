@@ -1,4 +1,4 @@
-package com.JohnRichard.utmLogin;
+package com.cubeStudio.UAuth;
 
 import javax.sql.rowset.spi.SyncFactoryException;
 import java.io.File;

@@ -2,7 +2,7 @@
 Java实现-启灵域界科技
 JsonDB算法基于aztice的JsonDB
  */
-package com.JohnRichard.utmLogin;
+package com.cubeStudio.UAuth;
 
 import org.apache.maven.surefire.shared.io.output.TeeOutputStream;
 
@@ -33,7 +33,7 @@ public class Main {
     private static final Logger logger = Logger.getLogger(Main.class.getName());
     private static HashMap<String, Boolean> hashMap = new HashMap<>();
     static ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-
+    static Boolean watchDog = ReadYaml.readYamlBoolean("config/config.yml","Config.watchDog");
     public static void main(String[] args) {
 
         String logFileName = "latest.log";
@@ -68,7 +68,9 @@ public class Main {
         System.out.println("UAuth now loading......");
         long pid = getCurrentProcessId();
         System.out.println("Running at pid: " + pid);
-        WatchDog.WatchDog();
+        if (watchDog) {
+            WatchDog.WatchDog();
+        }
         // 每500ms执行一次握手
         executor.scheduleAtFixedRate(WatchDog::handshake, 0, 500, TimeUnit.MILLISECONDS);
         // 打印操作系统信息
@@ -205,7 +207,7 @@ public class Main {
                 if (Objects.equals(Cmd, "Ver") || Cmd.equals("Version") || Cmd.equals("version")) {
                     System.out.println("""
                             UAuth 1.0 SnapShot
-                            By John
+                            Cube studio
                             Welcome!
                             """);
                 }

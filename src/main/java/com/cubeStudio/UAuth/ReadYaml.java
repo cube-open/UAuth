@@ -1,4 +1,4 @@
-package com.JohnRichard.utmLogin;
+package com.cubeStudio.UAuth;
 
 import org.yaml.snakeyaml.Yaml;
 

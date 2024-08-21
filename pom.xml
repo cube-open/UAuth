@@ -25,10 +25,10 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>com.JohnRichard.utmLogin.Main</mainClass>
+                            <mainClass>com.cubeStudio.UAuth.Main</mainClass>
                         </manifest>
                         <manifestEntries>
-                            <Main-Class>com.JohnRichard.utmLogin.Main</Main-Class>
+                            <Main-Class>com.cubeStudio.UAuth.Main</Main-Class>
                         </manifestEntries>
                     </archive>
                 </configuration>
@@ -41,10 +41,10 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>com.JohnRichard.utmLogin.Main</mainClass>
+                            <mainClass>com.cubeStudio.UAuth.Main</mainClass>
                         </manifest>
                         <manifestEntries>
-                            <Main-Class>com.JohnRichard.utmLogin.Main</Main-Class>
+                            <Main-Class>com.cubeStudio.UAuth.Main</Main-Class>
                         </manifestEntries>
                     </archive>
                     <descriptorRefs>

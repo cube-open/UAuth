@@ -2,7 +2,7 @@
 Java实现-启灵域界科技
 算法基于 aztice的JsonDB-LightSK
  */
-package com.JohnRichard.utmLogin;
+package com.cubeStudio.UAuth;
 
 public class LightSK {
     private String key;

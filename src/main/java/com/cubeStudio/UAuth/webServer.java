@@ -1,4 +1,4 @@
-package com.JohnRichard.utmLogin;
+package com.cubeStudio.UAuth;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

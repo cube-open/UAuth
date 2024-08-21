@@ -1,4 +1,4 @@
-package com.JohnRichard.utmLogin;
+package com.cubeStudio.UAuth;
 
 import java.io.File;
 

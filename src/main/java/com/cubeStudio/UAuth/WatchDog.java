@@ -1,4 +1,4 @@
-package com.JohnRichard.utmLogin;
+package com.cubeStudio.UAuth;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
@@ -20,6 +20,7 @@ public class WatchDog {
                     System.out.println("Can't keep up!Is server over load? Running " + behindTime + "ms behind!");
                     System.out.println("OOPS!Server was running behind over 20000ms");
                     System.out.println("Making dump......");
+                    System.out.println("==========Please don't report it to Cube-Open,it's not a bug or a crash!==========");
                     LLogger.LogRec("Can't keep up!Is server over load? Running " + behindTime + "ms behind!");
                     LLogger.LogRec("OOPS!Server was running behind over 20000ms");
                     printThreadSnapshot();
@@ -34,6 +35,7 @@ public class WatchDog {
                     System.out.println("Can't keep up!Is server over load? Running " + behindTime + "ms behind!");
                     System.out.println("OOPS!Server was running behind over 10000ms");
                     System.out.println("Making dump......");
+                    System.out.println("==========Please don't report it to Cube-Open,it's not a bug or a crash!==========");
                     LLogger.LogRec("Can't keep up!Is server over load? Running " + behindTime + "ms behind!");
                     LLogger.LogRec("OOPS!Server was running behind over 10000ms");
                     printThreadSnapshot();
