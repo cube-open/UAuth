@@ -295,7 +295,7 @@ public class Main {
                     }
 
                 }
-                if (CmdStatus == true) {
+                if (CmdStatus == true && Cmd=="") {
                     System.out.println("Wrong command: " + Cmd);
                     System.out.println("Please type ? or help to get  help.");
                     CmdStatus = false;
