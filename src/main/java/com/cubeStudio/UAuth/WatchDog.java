@@ -39,9 +39,9 @@ public class WatchDog {
                     System.out.println(">");
                     return;
                 }
-                if (behindTime >= 5000) {
+                if (behindTime >= 1000) {
                     LLogger.warn("Can't keep up!Is server over load? Running " + behindTime + "ms behind!");
-                    LLogger.warn("OOPS!Server was running behind over 5000ms");
+
                     System.out.println(">");
                     return;
                 }
