@@ -57,7 +57,7 @@ public class LLogger {
                 String timestamp = dateFormat.format(new Date());
                 writer.write(timestamp +"[UNKNOW]"+ logContent + "\n");
 
-                System.out.print(timestamp + "[UNKNOW]"+ Color.color(logContent,"WHITE") );
+                System.out.println(timestamp + "[UNKNOW]"+ Color.color(logContent,"WHITE") );
             } catch (IOException e) {
                 try {
                     getLogger().warning("Error!");
@@ -103,7 +103,7 @@ public class LLogger {
                 String timestamp = dateFormat.format(new Date());
 
                 writer.write(timestamp +"[INFO]"+ logContent + "\n");
-                System.out.print(timestamp + Color.color("[INFO]","GREEN")+ Color.color(logContent,"RESET") );
+                System.out.println(timestamp + Color.color("[INFO]","GREEN")+ Color.color(logContent,"RESET") );
             } catch (IOException e) {
                 try {
                     getLogger().warning("Error!");
