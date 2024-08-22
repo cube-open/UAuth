@@ -40,12 +40,12 @@ public class Main {
         String logFileName = "latest.log";
         Scanner scanner = new Scanner(System.in);
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            System.out.println("Stopping server......");
+            LLogger.info("Stopping server......");
             Status = false;
             if (scanner != null) {
-                System.out.println("Closing scanner......");
+                LLogger.info("Closing scanner......");
                 scanner.close();
-                System.out.println("Scanner was closed");
+                LLogger.info("Scanner was closed");
 
             }
 
@@ -66,9 +66,9 @@ public class Main {
         // 输出一些日志信息和控制台输出
 
         long startTime = System.currentTimeMillis();
-        System.out.println("UAuth now loading......");
+        LLogger.info("UAuth now loading......");
         long pid = getCurrentProcessId();
-        System.out.println("Running at pid: " + pid);
+        LLogger.info("Running at pid: " + pid);
         if (watchDog) {
             WatchDog.WatchDog();
         }
@@ -77,21 +77,21 @@ public class Main {
         // 打印操作系统信息
         String osName = System.getProperty("os.name");
         String osVersion = System.getProperty("os.version");
-        System.out.println("Operating System: " + osName + " " + osVersion);
+        LLogger.info("Operating System: " + osName + " " + osVersion);
 
         // 打印Java版本
         String javaVersion = System.getProperty("java.version");
-        System.out.println("Java Version: " + javaVersion);
+        LLogger.info("Java Version: " + javaVersion);
 
         // 打印运行时最大内存
         long maxMemory = Runtime.getRuntime().maxMemory();
         String maxMemoryStr = maxMemory == Long.MAX_VALUE ? "N/A" : String.valueOf(maxMemory);
-        System.out.println("Max Memory: " + maxMemoryStr);
+        LLogger.info("Max Memory: " + maxMemoryStr);
 
         // 打印运行时最小内存
         long minMemory = Runtime.getRuntime().totalMemory();
         String minMemoryStr = String.valueOf(minMemory);
-        System.out.println("Min Memory: " + minMemoryStr);
+        LLogger.info("Min Memory: " + minMemoryStr);
         Dir.mkdir(".", "log");
 
 
@@ -102,8 +102,8 @@ public class Main {
             InputStream inputStream = Main.class.getClassLoader().getResourceAsStream("config.yml");
 
             if (inputStream == null) {
-                System.out.println("Can not find config!");
-                LLogger.LogRec("Can not find config!");
+                LLogger.warn("Can not find config!");
+                LLogger.exception("Can not find config!");
                 return;
             }
             File destinationFolder = new File(destinationFolderPath);
@@ -135,8 +135,8 @@ public class Main {
                 inputStream.close();
                 outputStream.close();
 
-                System.out.println("Created config");
-                LLogger.LogRec("Created config");
+                LLogger.info("Created config");
+                LLogger.debug("Created config");
                 // 创建目标文件夹
             }
 
@@ -145,11 +145,12 @@ public class Main {
 
         } catch (IOException e) {
             logger.warning("Error while creating config!!!");
-            LLogger.LogRec("Error while creating config!!!");
-            LLogger.LogRec(Arrays.toString(e.getStackTrace()));
-            System.out.println("Cause by: " + e.getCause() + " " + e.getMessage());
+            LLogger.error("Error while creating config!!!");
+            LLogger.error(Arrays.toString(e.getStackTrace()));
+            LLogger.error("Cause by: " + e.getCause() + " " + e.getMessage());
         }
-        System.out.println("Registering command......");
+
+        LLogger.info("Registering command......");
         Boolean CmdStatus = false;
         RegCommand("exit");
         RegCommand("reload");
@@ -158,12 +159,12 @@ public class Main {
         RegCommand("version");
         RegCommand("help");
         RegCommand("?");
-        System.out.println("Auto backup=" + ReadYaml.readYamlBoolean("./config/config.yml", "Config.autoBackup.Enable"));
+        LLogger.info("Auto backup=" + ReadYaml.readYamlBoolean("./config/config.yml", "Config.autoBackup.Enable"));
         LightSK = ReadYaml.readYamlBoolean("./config/config.yml", "Config.key.enable");
         if (LightSK) {
             if (ReadYaml.readYamlString("./config/config.yml", "Config.key.key") == null) {
                 logger.warning("Key is null!Will not start server(key can't be like '123')!");
-                LLogger.LogRec("Key is null,Now stopping server.");
+                LLogger.info("Key is null,Now stopping server.");
                 try {
                     Thread.currentThread().sleep(500);
                 } catch (InterruptedException e) {
@@ -180,16 +181,16 @@ public class Main {
         sqlServer.con();
         if (ReadYaml.readYamlValue("config/config.yml", "Config.web.port") == null) {
             logger.warning("Error!Web server listen port is null!");
-            LLogger.LogRec("Web server listen port is null!");
+            LLogger.exception("Web server listen port is null!");
             System.exit(-1);
         }
 
         webServer.webStart();
-        LLogger.LogRec("Server started!");
+        LLogger.info("Server started!");
         long endTime = System.currentTimeMillis();
         long duration = endTime - startTime;
-        LLogger.LogRec("Server started in " + duration + "ms");
-        System.out.println("Server started in " + duration + "ms");
+        LLogger.info("Server started in " + duration + "ms");
+        LLogger.info("Server started in " + duration + "ms");
 
         while (Status!=false) {
 
@@ -224,8 +225,8 @@ public class Main {
                         // 读取资源文件
                         InputStream inputStream = Main.class.getClassLoader().getResourceAsStream("config.yml");
                         if (inputStream == null) {
-                            System.out.println("Can not find config!");
-                            LLogger.LogRec("Can not find config!");
+                            LLogger.warn("Can not find config!");
+                            LLogger.error("Can not find config!");
 
                             return;
                         }
@@ -244,17 +245,17 @@ public class Main {
                             inputStream.close();
                             outputStream.close();
 
-                            System.out.println("Created config");
-                            LLogger.LogRec("Created config");
+                            LLogger.info("Created config");
+
                             // 创建目标文件夹
                         }
                         // 创建目标文件夹
 
                     } catch (IOException e) {
-                        logger.warning("Error while creating config!!!");
-                        LLogger.LogRec("Error while creating config!!!");
-                        LLogger.LogRec(Arrays.toString(e.getStackTrace()));
-                        System.out.println("Cause by: " + e.getCause() + " " + e.getMessage());
+
+                        LLogger.exception("Error while creating config!!!");
+                        LLogger.exception(Arrays.toString(e.getStackTrace()));
+                        LLogger.error("Cause by: " + e.getCause() + " " + e.getMessage());
 
                     }
 
@@ -264,8 +265,8 @@ public class Main {
                         }
                         if (ReadYaml.readYamlString("./config/config.yml", "Config.key.key") == null) {
                             logger.warning("Key is null!Will not start server(key can't be like '123')!Server can't running!");
-                            System.out.println("Please input LightSK key in config,then reload again!");
-                            LLogger.LogRec("Key is null!");
+                            LLogger.error("Please input LightSK key in config,then reload again!");
+                            LLogger.exception("Key is null!");
                             LightSK = false;
 
                             try {
@@ -280,13 +281,13 @@ public class Main {
                         logger.warning("Error!LightSK is not enable!Server will not run.");
                         System.exit(-1);
                     }
-                    System.out.println("Try to connect mysql server......");
+                    LLogger.info("Try to connect mysql server......");
                     sqlServer.con();
-                    System.out.println("Restart web server......");
+                    LLogger.info("Restart web server......");
                     webServer.server.stop(0);
                     webServer.webStart();
-                    LLogger.LogRec("Reloaded the server.");
-                    System.out.println("Complete!");
+                    LLogger.info("Reloaded the server.");
+                    LLogger.info("Complete!");
 
                 }
                 for (String key : hashMap.keySet()) {
@@ -317,13 +318,21 @@ public class Main {
 
 
     }
-
+    /**
+     * 注册命令到哈希表中。
+     *
+     * <p>此方法尝试将指定的命令字符串添加到哈希表中，并设置其值为 `true`。
+     * 如果在添加过程中发生异常，则会在控制台输出错误信息，并记录错误级别的日志。
+     *
+     * @param string 要注册的命令字符串
+     * @throws Exception 如果添加命令到哈希表中时发生异常
+     */
     public static void RegCommand(String string) {
         try {
             hashMap.put(string, true);
         } catch (Exception exception) {
-            System.out.println("Reg command failed!Because: " + exception.getMessage());
-            LLogger.LogRec("Reg command failed!Because: " + exception.getMessage());
+
+            LLogger.error("Reg command failed!Because: " + exception.getMessage());
             exception.printStackTrace();
             throw exception;
         }

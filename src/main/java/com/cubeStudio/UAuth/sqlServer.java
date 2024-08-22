@@ -23,61 +23,60 @@ public class sqlServer {
 
 
             if (connection != null) {
-                System.out.println("Stopping connection");
+                LLogger.info("Stopping connection");
                 try {
                     connection.close();
                 } catch (SQLException e) {
                     Logger.getLogger("this").warning("Error while disconnecting mysql!");
-                    LLogger.LogRec("Error while disconnecting mysql!");
-                    LLogger.LogRec(Arrays.toString(e.getStackTrace()));
-                    LLogger.LogRec("Message: " + e.getMessage());
+                    LLogger.exception("Error while disconnecting mysql!");
+                    LLogger.exception(Arrays.toString(e.getStackTrace()));
+                    LLogger.exception("Message: " + e.getMessage());
                     FailCount++;
-                    System.out.println();
-                    System.out.println("Get more information at kernel.log!");
-                    System.out.println("Cause by: " + e.getCause());
-                    System.out.println();
-                    System.out.println("SQL State: " + e.getSQLState());
-                    System.out.println("--------------------------");
-                    System.out.println();
-                    System.out.println("trace: " + e.getStackTrace());
+                    
+                    LLogger.error("Get more information at kernel.log!");
+                    LLogger.error("Cause by: " + e.getCause());
+                    
+                    LLogger.error("SQL State: " + e.getSQLState());
+                    LLogger.error("--------------------------");
+                    
+                    LLogger.error("trace: " + e.getStackTrace());
                     e.printStackTrace();
-                    System.out.println("--------------------------");
-                    System.out.println();
-                    System.out.println("Message: " + e.getMessage());
-                    System.out.println();
-                    System.out.println("--------------------------");
-                    System.out.println("Now server ignore this problem!");
+                    LLogger.error("--------------------------");
+                    
+                    LLogger.error("Message: " + e.getMessage());
+                    
+                    LLogger.error("--------------------------");
+                    LLogger.error("Now server ignore this problem!");
                     throw new RuntimeException(e);
 
                 }
-                System.out.println("Connection was closed");
+                LLogger.info("Connection was closed");
             }
 
         }));
         if (ReadYaml.readYamlString("config/config.yml", "Config.sql.queryString") != null) {
             url = url + ReadYaml.readYamlString("config/config.yml", "Config.sql.queryString");
         }
-        System.out.println("Test sql server......");
-        LLogger.LogRec("Test sql server......");
+        LLogger.info("Test sql server......");
+        LLogger.info("Test sql server......");
         if (user == null || password == null || ReadYaml.readYamlString("config/config.yml", "Config.sql.url") == null || ReadYaml.readYamlValue("config/config.yml", "Config.sql.port") == null || ReadYaml.readYamlString("config/config.yml", "Config.sql.db") == null) {
             System.err.println("Sql connect info is wrong!Please check it.Stopping server......");
-            LLogger.LogRec("Sql connect info is wrong or null!Stopping server...");
+            LLogger.error("Sql connect info is wrong or null!Stopping server...");
             System.exit(-1);
         }
-        System.out.println("Loading drivers......");
-        LLogger.LogRec("Loading drivers......");
+        LLogger.info("Loading drivers......");
+        LLogger.info("Loading drivers......");
         Driver driver = null;
         try {
             driver = new com.mysql.jdbc.Driver();
             DriverManager.registerDriver(driver);
-            System.out.println("Done!");
-            LLogger.LogRec("Done!");
+            LLogger.info("Done!");
         } catch (SQLException e) {
             Logger.getLogger("this").warning("Error!Failed to load drivers!");
-            LLogger.LogRec("Error!Failed to load drivers!");
-            LLogger.LogRec(Arrays.toString(e.getStackTrace()));
-            System.out.println("Get more information at kernel.log!");
-            System.out.println("Cause by: " + e.getCause() + " " + e.getMessage());
+            LLogger.error("Error!Failed to load drivers!");
+            LLogger.error(Arrays.toString(e.getStackTrace()));
+            LLogger.info("Get more information at kernel.log!");
+            LLogger.info("Cause by: " + e.getCause() + " " + e.getMessage());
             System.exit(-1);
             throw new RuntimeException(e);
 
@@ -86,48 +85,48 @@ public class sqlServer {
 
         while (true) {
             try {
-                System.out.println("Trying to connect mysql server at " + url + " ......");
-                System.out.println("User: " + user);
+                LLogger.info("Trying to connect mysql server at " + url + " ......");
+                LLogger.info("User: " + user);
                 //连接mariadb/mysql
                 connection = DriverManager.getConnection(url, user, password);
-                System.out.println("Mysql connector loaded at: " + connection);
-                LLogger.LogRec("Mysql connector loaded at: " + connection);
-                System.out.println("test connected successful");
-                LLogger.LogRec("test connected successful");
-                System.out.println("Closing connect ......");
-                LLogger.LogRec("Closing connect ......");
+                
+                LLogger.debug("Mysql connector loaded at: " + connection);
+                
+                LLogger.debug("test connected successful");
+                
+                LLogger.debug("Closing connect ......");
                 connection.close();
-                LLogger.LogRec("Done");
-                System.out.println("Done");
+                LLogger.debug("Done");
+                
                 break;
             } catch (SQLException e) {
                 Logger.getLogger("this").warning("Error while connecting mysql!");
-                LLogger.LogRec("Error while connecting mysql!");
+                LLogger.error("Error while connecting mysql!");
                 retry_count = 5;
-                LLogger.LogRec(Arrays.toString(e.getStackTrace()));
-                LLogger.LogRec("Message: " + e.getMessage());
+                LLogger.error(Arrays.toString(e.getStackTrace()));
+                LLogger.error("Message: " + e.getMessage());
                 FailCount++;
-                System.out.println();
-                System.out.println("Get more information at kernel.log!");
-                System.out.println("Cause by: " + e.getCause());
-                System.out.println();
-                System.out.println("SQL State: " + e.getSQLState());
-                System.out.println("--------------------------");
-                System.out.println();
-                System.out.println("trace: " + e.getStackTrace());
+                
+                LLogger.error("Get more information at kernel.log!");
+                LLogger.error("Cause by: " + e.getCause());
+                
+                LLogger.error("SQL State: " + e.getSQLState());
+                LLogger.error("--------------------------");
+                
+                LLogger.error("trace: " + e.getStackTrace());
                 e.printStackTrace();
-                System.out.println("--------------------------");
-                System.out.println();
-                System.out.println("Message: " + e.getMessage());
-                System.out.println();
-                System.out.println("--------------------------");
+                LLogger.error("--------------------------");
+                
+                LLogger.error("Message: " + e.getMessage());
+                
+                LLogger.error("--------------------------");
                 if (FailCount > 10) {
-                    System.out.println("Test failed!Stopping server......");
+                    LLogger.info("Test failed!Stopping server......");
                     System.exit(-1);
                 }
                 while (retry_count >= 0) {
 
-                    System.out.println("Server will try again after " + retry_count + " seconds.");
+                    LLogger.info("Server will try again after " + retry_count + " seconds.");
                     if (ReadYaml.readYamlString("config/config.yml", "Config.sql.queryString") != null) {
                         url = url + ReadYaml.readYamlString("config/config.yml", "Config.sql.queryString");
                     }
@@ -140,7 +139,7 @@ public class sqlServer {
                     }
                 }
 
-                System.out.println("Retrying" + FailCount + "/10" + "......");
+                LLogger.info("Retrying" + FailCount + "/10" + "......");
                 try {
                     Thread.currentThread().sleep(1500);
                 } catch (InterruptedException ex) {
@@ -149,7 +148,7 @@ public class sqlServer {
                 password = ReadYaml.readYamlString("config/config.yml", "Config.sql.passwd");
                 user = ReadYaml.readYamlString("config/config.yml", "Config.sql.user");
                 url = "jdbc:mysql://" + ReadYaml.readYamlString("config/config.yml", "Config.sql.url") + ":" + ReadYaml.readYamlValue("config/config.yml", "Config.sql.port") + "/" + ReadYaml.readYamlString("config/config.yml", "Config.sql.db");
-                LLogger.LogRec("Retrying to connect mysql......");
+                LLogger.info("Retrying to connect mysql......");
             }
         }
     }

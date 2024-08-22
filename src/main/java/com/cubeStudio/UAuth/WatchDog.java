@@ -17,36 +17,32 @@ public class WatchDog {
                 // 判断主线程是否超时
                 int behindTime = Math.toIntExact(System.currentTimeMillis() - startTime);
                 if (behindTime >= 20000) {
-                    System.out.println("Can't keep up!Is server over load? Running " + behindTime + "ms behind!");
-                    System.out.println("OOPS!Server was running behind over 20000ms");
-                    System.out.println("Making dump......");
-                    System.out.println("==========Please don't report it to Cube-Open,it's not a bug or a crash!==========");
-                    LLogger.LogRec("Can't keep up!Is server over load? Running " + behindTime + "ms behind!");
-                    LLogger.LogRec("OOPS!Server was running behind over 20000ms");
+                    LLogger.error("Can't keep up!Is server over load? Running " + behindTime + "ms behind!");
+                    LLogger.error("OOPS!Server was running behind over 20000ms");
+                    LLogger.error("Making dump......");
+                    LLogger.error("==========Please don't report it to Cube-Open,it's not a bug or a crash!==========");
+                    LLogger.fetal("Can't keep up!Is server over load? Running " + behindTime + "ms behind!");
+                    LLogger.fetal("OOPS!Server was running behind over 20000ms");
                     printThreadSnapshot();
                     System.out.println(">");
-                    System.out.println("Stopping server......");
-                    LLogger.LogRec("Stopping server......");
+                    LLogger.info("Stopping server......");
                     Main.Status = false;
                     System.exit(-1);
                     return;
                 }
                 if (behindTime >= 10000) {
-                    System.out.println("Can't keep up!Is server over load? Running " + behindTime + "ms behind!");
-                    System.out.println("OOPS!Server was running behind over 10000ms");
-                    System.out.println("Making dump......");
-                    System.out.println("==========Please don't report it to Cube-Open,it's not a bug or a crash!==========");
-                    LLogger.LogRec("Can't keep up!Is server over load? Running " + behindTime + "ms behind!");
-                    LLogger.LogRec("OOPS!Server was running behind over 10000ms");
+                    LLogger.warn("Can't keep up!Is server over load? Running " + behindTime + "ms behind!");
+                    LLogger.warn("OOPS!Server was running behind over 10000ms");
+                    LLogger.warn("Making dump......");
+                    LLogger.warn("==========Please don't report it to Cube-Open,it's not a bug or a crash!==========");
+
                     printThreadSnapshot();
                     System.out.println(">");
                     return;
                 }
                 if (behindTime >= 5000) {
-                    System.out.println("Can't keep up!Is server over load? Running " + behindTime + "ms behind!");
-                    System.out.println("OOPS!Server was running behind over 5000ms");
-                    LLogger.LogRec("Can't keep up!Is server over load? Running " + behindTime + "ms behind!");
-                    LLogger.LogRec("OOPS!Server was running behind over 5000ms");
+                    LLogger.LogRec("Can't keep up!Is server over load? Running " + behindTime + "ms behind!","warn");
+                    LLogger.LogRec("OOPS!Server was running behind over 5000ms","warn");
                     System.out.println(">");
                     return;
                 }
@@ -73,7 +69,7 @@ public class WatchDog {
 
     public static void WatchDog() {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            System.out.println("Stopping WatchDog......");
+            LLogger.info("Stopping WatchDog......");
             watchdogThread.stop();
 
         }));
@@ -90,8 +86,8 @@ public class WatchDog {
         ThreadInfo[] threadInfos = threadMXBean.dumpAllThreads(true, true);
 
         for (ThreadInfo threadInfo : threadInfos) {
-            System.out.println(threadInfo.toString());
-            LLogger.LogRec(threadInfo.toString());
+            LLogger.warn(threadInfo.toString());
+            LLogger.LogRec(threadInfo.toString(),"warn");
         }
     }
     public void stop() {

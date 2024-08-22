@@ -27,7 +27,7 @@ public abstract class webServer implements HttpHandler {
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             if (server != null) {
-                System.out.println("Stopping web server......");
+                LLogger.info("Stopping web server......");
                 server.stop(0);
 
             }
@@ -35,8 +35,7 @@ public abstract class webServer implements HttpHandler {
         }));
 
         try {
-            System.out.println("Starting web server......");
-            LLogger.LogRec("Starting web server......at port: " + port);
+            LLogger.info("Starting web server......at port: " + port);
             server = HttpServer.create(new InetSocketAddress(port), 0);
             server.setExecutor(null);
             server.createContext("/", new HttpHandler() {
@@ -50,14 +49,13 @@ public abstract class webServer implements HttpHandler {
 
                         boolean hasUser = jsonNode.has("user");
                         boolean hasPasswd = jsonNode.has("passwd");
-                        boolean hasStatus = jsonNode.has("status");
-                        System.out.println("Get post!");
-                        System.out.println("Has 'user': " + hasUser);
-                        System.out.println("Has 'passwd': " + hasPasswd);
-                        System.out.println("Has 'status': " + hasStatus);
+                        boolean hasAction = jsonNode.has("action");
+                        boolean success = false;
+                        LLogger.info("Get post!"+"Has 'user': " + hasUser+"Has 'passwd': " + hasPasswd+"Has 'action' :"+hasAction);
+                        String token = "";
 
                         // 构建JSON响应数据
-                        String responseJson = "{\"message\": \"Received your request\"}";
+                        String responseJson = "{\"status\":"+success+",\"token\":\""+token+"\",\"message\":\"System is developing......\",\"version\":\"UAuth V0.1 DEV\"}";
 
                         exchange.sendResponseHeaders(200, responseJson.getBytes().length);
                         OutputStream outputStream = exchange.getResponseBody();
@@ -67,13 +65,13 @@ public abstract class webServer implements HttpHandler {
                         String requestedPath = exchange.getRequestURI().getPath();
 
                         // 输出请求的路径
-                        System.out.println("GET request for path: " + requestedPath);
-                        LLogger.LogRec("GET request for path: " + requestedPath);
+
+                        LLogger.info("GET request for path: " + requestedPath);
 
                         // 获取客户端的IP地址
                         String clientIp = exchange.getRemoteAddress().getAddress().getHostAddress();
-                        System.out.println("Request from IP: " + clientIp);
-                        LLogger.LogRec("Request from IP: " + clientIp);
+
+                        LLogger.info("Request from IP: " + clientIp);
 
                         // 去除开头的"/"
                         if (requestedPath.startsWith("/")) {
@@ -81,8 +79,8 @@ public abstract class webServer implements HttpHandler {
                         }
 
                         Path filePath = Paths.get("html/", requestedPath);
-                        System.out.println("Trying to access file at: " + filePath);
-                        LLogger.LogRec("Trying to access file at: " + filePath);
+
+                        LLogger.info("Trying to access file at: " + filePath);
 
                         // 检查文件或目录是否存在
                         if (Files.exists(filePath)) {
@@ -90,21 +88,21 @@ public abstract class webServer implements HttpHandler {
                                 // 如果是目录，尝试找到index.html
                                 Path indexPath = filePath.resolve("index.html");
                                 if (Files.exists(indexPath)) {
-                                    System.out.println("Found index.html, serving...");
+                                    LLogger.debug("Found index.html, serving...");
                                     serveFile(exchange, indexPath);
                                 } else {
-                                    System.out.println("No index.html found, sending 404.");
+                                    LLogger.debug("No index.html found, sending 404.");
                                     send404(exchange);
                                 }
                             } else {
                                 // 如果是文件，直接返回文件内容
-                                System.out.println("Serving...");
-                                LLogger.LogRec("Serving......");
+                                LLogger.debug("Serving...");
+                                LLogger.info("Serving......");
                                 serveFile(exchange, filePath);
                             }
                         } else {
-                            System.out.println("File not found, sending 404.");
-                            LLogger.LogRec("File not found, sending 404.");
+                            LLogger.debug("File not found, sending 404.");
+                            LLogger.info("File not found, sending 404.");
                             send404(exchange);
                         }
                     } else {
@@ -115,26 +113,26 @@ public abstract class webServer implements HttpHandler {
 
             });
             server.start();
-            System.out.println("Started web server!");
-            LLogger.LogRec("Done!");
+            LLogger.info("Started web server!");
+            LLogger.info("Done!");
         } catch (IOException e) {
             Logger.getLogger("this").warning("Error while starting web server!!");
-            LLogger.LogRec("Error while starting web server!!");
-            LLogger.LogRec(Arrays.toString(e.getStackTrace()));
-            LLogger.LogRec("Message: " + e.getMessage());
-            System.out.println();
-            System.out.println("Get more information at kernel.log!");
-            System.out.println("Cause by: " + e.getCause());
-            System.out.println();
-            System.out.println("--------------------------");
-            System.out.println();
-            System.out.println("trace: " + e.getStackTrace());
+            LLogger.info("Error while starting web server!!");
+            LLogger.info(Arrays.toString(e.getStackTrace()));
+            LLogger.info("Message: " + e.getMessage());
+
+            LLogger.error("Get more information at kernel.log!");
+            LLogger.error("Cause by: " + e.getCause());
+
+            LLogger.error("--------------------------");
+
+            LLogger.error("trace: " + e.getStackTrace());
             e.printStackTrace();
-            System.out.println("--------------------------");
-            System.out.println();
-            System.out.println("Message: " + e.getMessage());
-            System.out.println();
-            System.out.println("--------------------------");
+            LLogger.error("--------------------------");
+
+            LLogger.error("Message: " + e.getMessage());
+
+            LLogger.error("--------------------------");
             System.out.println("Now stopping server......");
             System.exit(-1);
             throw new RuntimeException(e);
@@ -146,14 +144,14 @@ public abstract class webServer implements HttpHandler {
 
 
         System.out.println("ServeServer is trying to find file: " + filePath);
-        LLogger.LogRec("ServeServer is trying to find file: " + filePath);
+        LLogger.info("ServeServer is trying to find file: " + filePath);
         if (Files.isDirectory(filePath)) {
             Path indexPath = filePath.resolve("index.html");
             if (Files.exists(indexPath)) {
                 serveFile(exchange, indexPath);
             } else {
                 System.out.println("No index.html found, sending 404.");
-                LLogger.LogRec("No index.html found, sending 404.");
+                LLogger.info("No index.html found, sending 404.");
                 send404(exchange);
             }
         } else if (Files.exists(filePath)) {
@@ -166,7 +164,7 @@ public abstract class webServer implements HttpHandler {
             }
         } else {
             System.out.println("File not found, sending 404.");
-            LLogger.LogRec("File not found, sending 404.");
+            LLogger.info("File not found, sending 404.");
             send404(exchange);
         }
     }
