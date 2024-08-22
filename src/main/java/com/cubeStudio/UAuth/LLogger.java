@@ -32,8 +32,7 @@ public class LLogger {
             case "fetal" -> fetal(logContent);
 
             case "debug" -> debug(logContent);
-            default -> {
-            }
+
         }
         if (logFilePath != null) {
             File logFile = new File(logFilePath + "/kernel.log");

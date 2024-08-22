@@ -17,12 +17,11 @@ public class WatchDog {
                 // 判断主线程是否超时
                 int behindTime = Math.toIntExact(System.currentTimeMillis() - startTime);
                 if (behindTime >= 20000) {
-                    LLogger.error("Can't keep up!Is server over load? Running " + behindTime + "ms behind!");
-                    LLogger.error("OOPS!Server was running behind over 20000ms");
-                    LLogger.error("Making dump......");
-                    LLogger.error("==========Please don't report it to Cube-Open,it's not a bug or a crash!==========");
                     LLogger.fetal("Can't keep up!Is server over load? Running " + behindTime + "ms behind!");
                     LLogger.fetal("OOPS!Server was running behind over 20000ms");
+                    LLogger.error("Making dump......");
+                    LLogger.error("==========Please don't report it to Cube-Open,it's not a bug or a crash!==========");
+
                     printThreadSnapshot();
                     System.out.println(">");
                     LLogger.info("Stopping server......");
@@ -41,8 +40,8 @@ public class WatchDog {
                     return;
                 }
                 if (behindTime >= 5000) {
-                    LLogger.LogRec("Can't keep up!Is server over load? Running " + behindTime + "ms behind!","warn");
-                    LLogger.LogRec("OOPS!Server was running behind over 5000ms","warn");
+                    LLogger.warn("Can't keep up!Is server over load? Running " + behindTime + "ms behind!");
+                    LLogger.warn("OOPS!Server was running behind over 5000ms");
                     System.out.println(">");
                     return;
                 }
